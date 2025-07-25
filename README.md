@@ -27,6 +27,7 @@ The system control directory holds code that allows the
 detector to start up and ensures that all scripts run in
 the right order without any errors.  
 
-
-
-
+## Logs 
+Logs directory holds important information on what files 
+have been previously analyzed as well as how the system is
+running and any error reporting. 

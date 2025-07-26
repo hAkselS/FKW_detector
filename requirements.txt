@@ -1,0 +1,13 @@
+#   requirements.txt
+#   This file is used to specify the dependencies for the project.
+#   Please create the venv using: python3 -m venv i_love_whales 
+#   python 3.11 is recommended. 
+
+matplotlib
+numpy>=1.23.5,<2.0.0
+pandas
+scipy==1.15.1
+ultralytics
+torch
+torchvision
+

@@ -31,3 +31,9 @@ the right order without any errors.
 Logs directory holds important information on what files 
 have been previously analyzed as well as how the system is
 running and any error reporting. 
+
+## Venv (not shown)
+Make sure to run code in a python3.11 virtual environment! 
+Creation: python3 -m venv venv 
+Activation: source venv/bin/activate
+Setup (Once only): pip intall -r requirements.txt

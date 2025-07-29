@@ -1,10 +1,10 @@
 '''
 File:   audio_to_spectro.py
 
-Spec:   Audio to spectro produces two images per one minute of ingested audio. 
+Spec:   Audio to spectro ingests one minute of audio data and transforms it into two spectrograms. 
         Each image contains ten, three second spectrogram strips separated by a small 
         black space. Images are roughly square for optimal performance with YOLO. 
-        Images are not saved in gray scale for YOLO training purposes. 
+        Images are not saved in gray scale format for YOLO training purposes. 
 
 I/O:    This program expects one minute audio inputs. 
         This program outputs spetrograms images containing ten spectrogram strips.
@@ -16,6 +16,7 @@ Usage:  python3 audio_transform/audio_to_spectro.py <path/to/audio.wave> -o <out
 Optioanal Args: -ch allows for channel selections: default channel is 5
 
 TODO: consider program outputs for use in process control 
+Returns: 
 '''
 
 import matplotlib.pyplot as plt
@@ -45,7 +46,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
         channel (int): Audio channel to process (default: 5)
     
     Returns:
-        tuple: (success, message, output_files)
+        tuple: (boolean, # of output files, output_files)
     """
     try:
         # Get audio file name
@@ -92,7 +93,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
             )
             output_files.append(output_file)
         
-        return True, f"Successfully processed {len(output_files)} spectrograms", output_files
+        return True, len(output_files), output_files
         
     except Exception as e:
         return False, f"Error processing {wave_file_path}: {str(e)}", []

@@ -66,7 +66,7 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
                 results = model(file_path, conf=confidence_threshold)
                 
                 # Extract results for this file
-                file_results = {
+                file_results = { # TODO: may want to add time here 
                     'file_path': file_path,
                     'detections': [],
                     'detection_count': 0
@@ -93,7 +93,7 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
        
         
         success_message = f"Successfully processed {len(input_files)} files, found {total_detections} detections"
-        return True, success_message, # TODO 
+        return True, success_message, file_results
         
     except Exception as e:
         return False, f"Inference error: {str(e)}", {}

@@ -17,9 +17,14 @@ import os
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
-import audio_transorm.audio_to_spectro as audio_to_spectro
+import audio_transform.audio_to_spectro as audio_to_spectro
+import prediction_interface.inference as inference
 
-status, number, files = audio_to_spectro.process_audio_to_spectrograms('/Users/akselsloan/FKW_detector/scratch_materials/1706_20170715_220250_436.wav', project_root + '/images')
+status, files = audio_to_spectro.process_audio_to_spectrograms('/Users/akselsloan/FKW_detector/scratch_materials/1706_20170715_220250_436.wav', project_root + '/images')
 
-print(f"Status: {status}, Number of files: {number}, Files: {files}")
-print(f"Files are of type: {type(files)}")
+print(f"\nStatus: {status}, Files: {files}")
+
+
+second_status, message = inference.perform_inference(files, output_directory=project_root + '/images')
+
+print(f"Second Status: {second_status}, Message: {message}")

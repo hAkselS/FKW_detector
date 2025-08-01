@@ -11,12 +11,7 @@ I/O:    This program expects one minute audio inputs.
         Spectrograms do not overlap each other.
         This program currently can ONLY ingest 1 minute audio inputs. 
 
-Usage:  python3 audio_transform/audio_to_spectro.py <path/to/audio.wave> -o <output/directory>
-
-Optioanal Args: -ch allows for channel selections: default channel is 5
-
-TODO: consider program outputs for use in process control 
-Returns: 
+Usage:  Do not run this program directly. Call from system_control/transform_and_inference.py.
 '''
 
 import matplotlib.pyplot as plt
@@ -24,7 +19,6 @@ import os
 from scipy.signal import spectrogram, get_window
 from scipy.io import wavfile
 import numpy as np
-import argparse
 import sys 
 
 ###################################################################
@@ -46,7 +40,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
         channel (int): Audio channel to process (default: 5)
     
     Returns:
-        tuple: (boolean, # of output files, output_files)
+        tuple: (boolean, output_files)
     """
     try:
         # Get audio file name
@@ -54,7 +48,10 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
         
         # Read audio file
         try:
-            sample_rate, data = wavfile.read(wave_file_path)
+            import warnings
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message=".*Reached EOF prematurely.*")
+                sample_rate, data = wavfile.read(wave_file_path)
         except ValueError:
             return False, "Invalid input file type. Supported file type(s): .wav", []
         
@@ -93,7 +90,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
             )
             output_files.append(output_file)
         
-        return True, len(output_files), output_files
+        return True, output_files
         
     except Exception as e:
         return False, f"Error processing {wave_file_path}: {str(e)}", []
@@ -146,30 +143,8 @@ def _make_spectro(all_chunks, audio_file_name, sample_rate, output_directory, nu
     return image_name
 
 def main():
-    """Command line interface - preserves original script functionality."""
-    # Accept command line inputs
-    parser = argparse.ArgumentParser()
-    parser.add_argument("wave_file_path", help="process this file from audio to spectrograms")
-    parser.add_argument("-o", "--output", default='images', help="choose a location for image outputs")
-    parser.add_argument("-ch", "--channel", type=int, default=5, help="select an audio channel to transform")
-    args = parser.parse_args()
-    
-    print(f"\nMetadata for [{args.wave_file_path}]:")
-    print(f"Audio name: [{os.path.basename(args.wave_file_path)[:-4]}]")
-    
-    success, message, output_files = process_audio_to_spectrograms(
-        args.wave_file_path, 
-        args.output, 
-        args.channel
-    )
-    
-    if success:
-        print(f"Sample rate and other details processed successfully")
-        for file in output_files:
-            print(f"Saved {file}")
-    else:
-        print(f"Error: {message}")
-        sys.exit(1)
+    print("This program should not be run directly. Use system_control/transform_and_inference.py instead.")
+    sys.exit(1)
 
 if __name__ == "__main__":
     main()

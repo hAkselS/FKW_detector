@@ -14,8 +14,8 @@ are analyzed using a YOLO11 nano model.
 The audio tranform directory holds code used
 to transorm audio into spectrograms. 
 
-## Detection
-The detection directory hold code that handles selection of
+## Prediction Interface
+The prediction interface directory hold code that handles selection of
 audio and images for analysis. Detection also holds 
 the script used to analyze spectrograms with AI. 
 

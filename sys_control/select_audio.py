@@ -1,11 +1,10 @@
 '''
 File:   sys_control/select_audio.py
 
-Spec:   Determine which audio file to process. Store all files to be
-        analyzed into a csv file which is parsed by audio_to_spectro.py and
-        inference.py. TODO: deciding whether to have one file per deployment or
-        one file per ascent / descent. 
+Spec:   Maintain CSV file with time ranges for each analyzed
+        ascent / descent. Create a CSV file for each ascent / descent
+        with a list of aud io files to process and success flags.
 
-Usage:  python3 sys_control/select_audio.py -d <directory> -o <output_file_name>
 '''
 
+# 

@@ -53,7 +53,7 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
         
         # Load YOLO model
         try:
-            model = YOLO(model_path)
+            model = YOLO(model_path, verbose=False)  # Disable verbose output
         except Exception as e:
             return False, f"Failed to load model: {str(e)}", {}
         
@@ -62,8 +62,8 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
         
         for file_path in input_files:
             try:
-                # Run inference
-                results = model(file_path, conf=confidence_threshold)
+                # Run inference (verbose=False to suppress output)
+                results = model(file_path, conf=confidence_threshold, verbose=False)
                 
                 # Extract results for this file
                 file_results = {
@@ -91,14 +91,13 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
             except Exception as e:
                 return False, f"Failed to process {file_path}: {str(e)}", {}
        
-        
         success_message = f"Successfully processed {len(input_files)} files, found {total_detections} detections"
         return True, success_message
         
     except Exception as e:
         return False, f"Inference error: {str(e)}", {}
 
-def save_results(results_dict, output_file):
+def save_results(results_dict, output_file): # TODO: set this up to save results in results.csv format.
     """Save inference results to a JSON file."""
     try:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)

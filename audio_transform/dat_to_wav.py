@@ -9,8 +9,75 @@ Usage:  Call this script from system_control/transform_and_inference.py.
 I/O:    This program expects a .dat file as input and outputs a .wav file
 '''
 
+# TODO: read dat header and extract parameters like sample rate and size
 import wave
 import sys
+
+def parse_dat_header(dat_file_path):
+    """
+    Parses the header of a .dat file to extract audio parameters.
+    
+    Args:
+        dat_file_path (str): Path to the .dat file
+    
+    Returns:
+        sample_rate, sample_width,    """
+    
+    with open(dat_file_path, 'rb') as dat_file:
+
+        line = dat_file.readline().decode('utf-8').strip()
+
+        while True:
+            line = dat_file.readline(32).decode('utf-8').strip()
+            print(line)
+            if not line:
+                break
+            # check for the end of ascii header, which will a null char
+            if line[0] == '\0':
+                break
+
+            # parse the line
+            line = line.strip(";")
+            line = line.replace(" ", "")
+            #line = line.replace("'", "\"")
+            [var, value] = line.split("=")
+            if var == "sensor_id":
+               sensor_id = value
+            if var == "platform_id":
+               platform_id = value
+            if var == "location_id":
+               location_id = value
+            if var == "instrument_id":
+               instrument_id = value
+            if var == "second":
+                second = float(value)
+            if var == "time":
+                time = value
+            if var == "file_size":
+                file_size = int(value)
+            if var == "buffer_size":
+                buffer_size = int(value)
+            if var == "samples_per_buffer":
+                samples_per_buffer = int(value)
+            if var == "sampling_rate":
+                sampling_rate = int(value)
+            if var == "channels":
+                channels = int(value)
+            if var == "sample_size":
+                sample_size = int(value)
+            if var == "gain":
+                gain = int(value)
+            if var == "timestamp":
+                timestamp = int(value)
+
+        # number of adc buffer in the file            
+        number_buffers = file_size * 512 / buffer_size
+
+        dt = 1.0 / sampling_rate
+        
+        duration = samples_per_buffer * dt
+
+    return sample_rate, sample_width
 
 def convert_dat_to_wav(input_dat_file, output_directory, num_channels, sample_width, frame_rate):
     """

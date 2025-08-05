@@ -32,11 +32,12 @@ import image_inference.inference as inference
 input_file = "scratch_materials/WISPR_240930_000405.dat"
 output_file_path = "scratch_materials/"
 channels = 1  # Mono
-sample_size = 2  # 16-bit audio
-rate = 299000  # 299 kHz (This provides 1 minute of audio data)(obtained emperically)
+sample_size = 2  # 16-bit audio # TODO: change to 2
+rate = 299000  # 200 kHz (This provides 1 minute of audio data)(obtained emperically) # TODO: change to 200k
 
 status, message, output_file_path = dat_to_wav.convert_dat_to_wav(input_file, output_file_path, channels, sample_size, rate)
 print(f"\nDAT to WAV conversion status: {status}, Message: {message}, Output File: {output_file_path}")
 
 status, message, files = audio_to_spectro.process_audio_to_spectrograms(output_file_path, '/Users/akselsloan/FKW_detector/images')
 print(f"\nAudio transform status: {status}, Message: {message}, Files: {files}")
+

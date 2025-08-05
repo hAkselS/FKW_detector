@@ -44,18 +44,18 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
     try:
         # Check if model file exists
         if not os.path.exists(model_path):
-            return False, f"Model file not found: {model_path}", {}
+            return False, f"Model file not found: {model_path}"
         
         # Check if all input files exist
         for file_path in input_files:
             if not os.path.exists(file_path):
-                return False, f"Input file not found: {file_path}", {}
+                return False, f"Input file not found: {file_path}"
         
         # Load YOLO model
         try:
             model = YOLO(model_path, verbose=False)  # Disable verbose output
         except Exception as e:
-            return False, f"Failed to load model: {str(e)}", {}
+            return False, f"Failed to load model: {str(e)}"
         
         
         total_detections = 0
@@ -89,13 +89,13 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
                 total_detections += file_results['detection_count']
                 
             except Exception as e:
-                return False, f"Failed to process {file_path}: {str(e)}", {}
+                return False, f"Failed to process {file_path}: {str(e)}"
        
         success_message = f"Successfully processed {len(input_files)} files, found {total_detections} detections"
         return True, success_message
         
     except Exception as e:
-        return False, f"Inference error: {str(e)}", {}
+        return False, f"Inference error: {str(e)}"
 
 def save_results(results_dict, output_file): # TODO: set this up to save results in results.csv format.
     """Save inference results to a JSON file."""

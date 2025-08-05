@@ -18,13 +18,25 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 import audio_transform.audio_to_spectro as audio_to_spectro
+import audio_transform.dat_to_wav as dat_to_wav
 import image_inference.inference as inference
 
-status, files = audio_to_spectro.process_audio_to_spectrograms('/Users/akselsloan/FKW_detector/scratch_materials/1706_20170709_034442_942.wav', project_root + '/images')
-
-print(f"\nAudio transform status: {status}, Files: {files}")
 
 
-second_status, message = inference.perform_inference(files, output_directory=project_root + '/images')
+# second_status, message = inference.perform_inference(files, output_directory=project_root + '/images')
 
-print(f"\nImage inference status: {second_status}, Message: {message}")
+# print(f"\nImage inference status: {second_status}, Message: {message}")
+
+# Test:
+# # convert WISPR .dat file to .wav
+input_file = "scratch_materials/WISPR_240930_000405.dat"
+output_file_path = "scratch_materials/"
+channels = 1  # Mono
+sample_size = 2  # 16-bit audio
+rate = 299000  # 299 kHz (This provides 1 minute of audio data)(obtained emperically)
+
+status, message, output_file_path = dat_to_wav.convert_dat_to_wav(input_file, output_file_path, channels, sample_size, rate)
+print(f"\nDAT to WAV conversion status: {status}, Message: {message}, Output File: {output_file_path}")
+
+status, message, files = audio_to_spectro.process_audio_to_spectrograms(output_file_path, '/Users/akselsloan/FKW_detector/images')
+print(f"\nAudio transform status: {status}, Message: {message}, Files: {files}")

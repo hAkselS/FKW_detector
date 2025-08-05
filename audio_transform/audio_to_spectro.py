@@ -90,7 +90,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
             )
             output_files.append(output_file)
         
-        return True, output_files
+        return True, f"Successfully processed {audio_file_name}: generated {len(output_files)} spectrograms from {num_chunks} audio chunks | btw, sample rate is {sample_rate}", output_files
         
     except Exception as e:
         return False, f"Error processing {wave_file_path}: {str(e)}", []

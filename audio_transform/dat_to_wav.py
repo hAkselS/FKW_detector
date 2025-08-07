@@ -9,10 +9,33 @@ Usage:  Call this script from system_control/transform_and_inference.py.
 I/O:    This program expects a .dat file as input and outputs a .wav file
 '''
 
-# TODO: If sample size is 2, safeyway convert to sample size = 2 (scipy wave can only handle 16 bit sample width)
+# TODO: If sample size is 3 safely convert to sample size = 2 (scipy wave can only handle 16 bit sample width)
 import wave
 import sys
 import os 
+import soundfile as sf 
+
+def reduce_sample_size(file_name):
+    '''
+    Reduce the sample size (also called sample width) of a .wav file.
+
+    Args:
+        file_name (str): Path to the .wav file to be reduced.
+
+    Returns:
+        Boolean: True if successful, False otherwise.
+    '''
+    target_sample_size = 'PCM_16'  # Target sample size in bytes (16 bits)
+    try:
+        # Read the original .wav file
+        data, samplerate = sf.read(file_name)  
+        sf.write(file_name, data, samplerate, subtype=target_sample_size)
+        print(f"Reduced sample size of '{file_name}' to {target_sample_size}.")
+        return True
+    except Exception as e:
+        print(f"Error reducing sample size of '{file_name}': {e}")
+        return False
+
 
 def convert_dat_to_wav(input_dat_file, output_directory):
     """
@@ -79,6 +102,14 @@ def convert_dat_to_wav(input_dat_file, output_directory):
             wav_file.setframerate(sampling_rate)
             wav_file.writeframes(raw_audio_data)
 
+        # Step 5: Reduce sample size if necessary
+        if sample_size == 3:  # If sample size is 3 bytes, reduce it to 2 bytes
+            try:
+                reduce_sample_size(output_wav_file_path)
+            except Exception as e:
+                return False, f"Error reducing sample size: {str(e)}", None
+        
+        # Step 6: Return success message
         success_message = f"Successfully converted '{dat_filename}' to '{wav_filename}'"
         return True, success_message, output_wav_file_path
 

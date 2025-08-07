@@ -61,15 +61,38 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
                 return False, f"Channel {channel} not available. File has {data.shape[1]} channels", []
             data = data[:, channel]
         
-        # Validate length
+       
+       
+               # Validate minimum length (at least 31 seconds required)
         length = data.shape[0] / sample_rate
-        if not (58 < length < 62):
-            return False, f"Length not ~60 second ({length:.1f}s), undefined behavior", []
+        if length < 31:
+            return False, f"Audio too short ({length:.1f}s). Minimum 31 seconds required.", []
         
-        # Determine the number of whole 3 second chunks
+        # Calculate required samples for 60 seconds total
+        target_length_samples = int(sample_rate * 60)  # 60 seconds worth of samples
+        current_length_samples = data.shape[0]
+        
+        # Zero-pad if necessary to reach 60 seconds
+        if current_length_samples < target_length_samples:
+            padding_needed = target_length_samples - current_length_samples
+            padding_seconds = padding_needed / sample_rate
+            print(f"Zero-padding audio: adding {padding_seconds:.1f} seconds of 0s to reach 60 seconds total")
+            
+            # Add zeros to the end of the audio data
+            zeros = np.zeros(padding_needed, dtype=data.dtype)
+            data = np.concatenate([data, zeros])
+        
+        # If longer than 60 seconds, truncate to exactly 60 seconds
+        elif current_length_samples > target_length_samples:
+            truncate_seconds = (current_length_samples - target_length_samples) / sample_rate
+            print(f"Truncating audio: removing {truncate_seconds:.1f} seconds to fit 60 seconds total")
+            data = data[:target_length_samples]
+        
+        # Now we have exactly 60 seconds of data
+        # Determine the number of whole 3 second chunks (should be exactly 20)
         samples_per_chunk = int(sample_rate * chunk_duration)
-        num_chunks = int(len(data) / samples_per_chunk)
-        
+        num_chunks = int(len(data) / samples_per_chunk)  # Should be 20
+
         # Create chunks
         all_chunks = [] 
         for i in range(num_chunks):
@@ -90,7 +113,9 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
             )
             output_files.append(output_file)
         
-        return True, f"Successfully processed {audio_file_name}: generated {len(output_files)} spectrograms from {num_chunks} audio chunks | btw, sample rate is {sample_rate}", output_files
+        return True, f"Successfully processed {audio_file_name}: generated {len(output_files)} spectrograms from {num_chunks} audio chunks (duration: {len(data)/sample_rate:.1f}s)", output_files
+        
+
         
     except Exception as e:
         return False, f"Error processing {wave_file_path}: {str(e)}", []

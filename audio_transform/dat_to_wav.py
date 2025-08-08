@@ -79,7 +79,7 @@ def convert_dat_to_wav(input_dat_file, output_directory):
             if channels == None:
                 channels = 1 # Default to mono if not specified
             # DEBUG
-            print(f"Header values: sampling_rate={sampling_rate}, channels={channels}, sample_size={sample_size}, file_size={file_size}")
+            print(f"Header values: sampling_rate={sampling_rate}, channels={channels}, sample_size={sample_size}, file_size={file_size}\n")
 
             # Validate header values
             if None in (sampling_rate, channels, sample_size, file_size):

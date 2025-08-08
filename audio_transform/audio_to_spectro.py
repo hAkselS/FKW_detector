@@ -61,9 +61,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
                 return False, f"Channel {channel} not available. File has {data.shape[1]} channels", []
             data = data[:, channel]
         
-       
-       
-               # Validate minimum length (at least 31 seconds required)
+        # Validate minimum length (at least 31 seconds required)
         length = data.shape[0] / sample_rate
         if length < 31:
             return False, f"Audio too short ({length:.1f}s). Minimum 31 seconds required.", []
@@ -76,16 +74,30 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
         if current_length_samples < target_length_samples:
             padding_needed = target_length_samples - current_length_samples
             padding_seconds = padding_needed / sample_rate
-            print(f"Zero-padding audio: adding {padding_seconds:.1f} seconds of 0s to reach 60 seconds total")
+            print(f"\nInserting noise padding audio: adding {padding_seconds:.3f} seconds of noise to reach 60 seconds total")
             
-            # Add zeros to the end of the audio data
-            zeros = np.zeros(padding_needed, dtype=data.dtype)
-            data = np.concatenate([data, zeros])
-        
+            # Add noise to the end of the audio data (instead of constant values)
+            # Generate pink/brown noise in the frequency range of interest
+            noise_samples = padding_needed
+            
+            # Create filtered noise in your frequency range (3500-9500 Hz)
+            noise = np.random.normal(0, 1, noise_samples)
+            
+            # Apply simple bandpass by mixing frequencies
+            t_noise = np.arange(noise_samples) / sample_rate
+            freq_center = (freq_min + freq_max) / 2  # ~6500 Hz
+            noise_filtered = noise * np.sin(2 * np.pi * freq_center * t_noise)
+            
+            # Scale to reasonable amplitude
+            noise_filtered = noise_filtered * (np.std(data) * 0.1)  # 10% of original signal strength
+            
+            data = np.concatenate([data, noise_filtered.astype(data.dtype)])
+    
+
         # If longer than 60 seconds, truncate to exactly 60 seconds
         elif current_length_samples > target_length_samples:
             truncate_seconds = (current_length_samples - target_length_samples) / sample_rate
-            print(f"Truncating audio: removing {truncate_seconds:.1f} seconds to fit 60 seconds total")
+            print(f"\nTruncating audio: removing {truncate_seconds:.1f} seconds to fit 60 seconds total")
             data = data[:target_length_samples]
         
         # Now we have exactly 60 seconds of data

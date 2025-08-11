@@ -22,7 +22,7 @@ Notes:  !!! This script uses main and does not receive any arguments !!!
 
 import yaml 
 import os 
-import csv
+import pandas as pd
 import json
 from datetime import datetime
 from collections import OrderedDict
@@ -31,6 +31,7 @@ from collections import OrderedDict
 ###################################################################
 # CONFIGURATION DEFAULTS
 config_file = 'config.yaml'  # Path to your configuration file
+csv_directory = 'logs/dive_logs'  # Directory where CSV files will be saved
 time_mapping_file = 'logs/analyst_logs/observed_audio_and_times.json'  # Path to the file mapping JSON
 directory_date_format = "%y%m%d" # How date directories are named
 
@@ -62,6 +63,56 @@ def load_config(config_file):
     except Exception as e:
         print(f"Select Audio Error: Unexpected error loading '{config_file}': {str(e)}")
         return {}
+    
+def create_dive_CSV(csv_directory, csv_name):
+    """
+    Create a CSV file for tracking dive analysis progress using pandas.
+    
+    Args:
+        csv_directory (str): Directory where the CSV file will be created
+        csv_name (str): Name of the CSV file (with or without .csv extension)
+    
+    Returns:
+        tuple: (success, message, csv_file_path)
+    """
+    
+    try:
+        # Ensure directory exists
+        os.makedirs(csv_directory, exist_ok=True)
+        
+        # Create full path
+        csv_file_path = os.path.join(csv_directory, csv_name)
+        
+        # Define CSV columns with proper data types
+        columns = [
+            'file_name',           # string
+            'start_time',          # datetime/string
+            'selected_for_sampling', # boolean
+            'dat_to_wave',         # boolean
+            'wave_to_spectro',     # boolean
+            'image_analyzed'       # boolean
+        ]
+        
+        # Create empty DataFrame with specified columns
+        df = pd.DataFrame(columns=columns)
+        
+        # Set appropriate data types
+        df = df.astype({
+            'file_name': 'string',
+            'selected_for_sampling': 'boolean',
+            'dat_to_wave': 'boolean', 
+            'wave_to_spectro': 'boolean',
+            'image_analyzed': 'boolean'
+        })
+        
+        # Save to CSV
+        df.to_csv(csv_file_path, index=False)
+        
+        return True, f"Successfully created CSV file: {csv_name}", csv_file_path
+    
+    except Exception as e:
+        return False, f"Error creating CSV file: {str(e)}", None    
+
 
 def is_mapping_sorted(time_mapping_file): # Currently not used! 
     """
@@ -192,6 +243,7 @@ def save_file_mapping(file_time_map, time_mapping_file):
         print(f"Error saving mapping: {e}")
         return False
 
+#TODO: NEXT UP: add the new files into a CSV
 def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.json'):
     """Update existing mapping with any new files found."""
     # Load existing mapping (already sorted)
@@ -233,6 +285,30 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     # Sort only the new files and append to existing mapping
     sorted_new_files = sorted(new_files.items())
     
+    # Create CSV with date range name for new files
+    if sorted_new_files:
+        # Get first and last timestamps from sorted new files
+        first_timestamp = sorted_new_files[0][0]  # datetime object
+        last_timestamp = sorted_new_files[-1][0]  # datetime object
+        
+        # Format timestamps for CSV filename (YYMMDD_HHMMSS format)
+        first_str = first_timestamp.strftime("%y%m%d_%H%M%S")
+        last_str = last_timestamp.strftime("%y%m%d_%H%M%S")
+        
+        # Create CSV name: first_datetime-last_datetime.csv
+        csv_name = f"{first_str}-{last_str}.csv"
+        
+        # Create the CSV
+        success, message, csv_path = create_dive_CSV(csv_directory, csv_name)
+        
+        if success:
+            print(f"\n✓ Created CSV for new files: {csv_name}")
+            print(f"  Time range: {first_timestamp} to {last_timestamp}")
+            print(f"  CSV path: {csv_path}\n")
+        else:
+            print(f"\n✗ Failed to create CSV: {message}\n")
+    
+
     # Append new files to existing mapping (no need to resort existing)
     for timestamp, file_path in sorted_new_files:
         existing_mapping[timestamp] = file_path

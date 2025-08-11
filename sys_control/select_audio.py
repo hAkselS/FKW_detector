@@ -17,6 +17,8 @@ Super Spec:   List files in the ascent / descent directories.
 
 Notes:  !!! This script uses main and does not receive any arguments !!!
 '''
+# TODO: This script adds new files to the existing list of files that have been analyzed on
+#       the assumption that the new files all represent times AFTER the last existing file.   
 
 import yaml 
 import os 
@@ -29,7 +31,7 @@ from collections import OrderedDict
 ###################################################################
 # CONFIGURATION DEFAULTS
 config_file = 'config.yaml'  # Path to your configuration file
-mapping_file = 'logs/analyst_logs/file_mapping.json'  # Path to the file mapping JSON
+time_mapping_file = 'logs/analyst_logs/observed_audio_and_times.json'  # Path to the file mapping JSON
 directory_date_format = "%y%m%d" # How date directories are named
 
 ###################################################################
@@ -61,10 +63,100 @@ def load_config(config_file):
         print(f"Select Audio Error: Unexpected error loading '{config_file}': {str(e)}")
         return {}
 
-def load_file_mapping(mapping_file):
+def is_mapping_sorted(time_mapping_file): # Currently not used! 
+    """
+    Efficiently check if the JSON mapping file is properly sorted by timestamps.
+    
+    Args:
+        time_mapping_file (str): Path to the JSON mapping file
+    
+    Returns:
+        bool: True if sorted, False if not sorted or file doesn't exist
+    """
+    try:
+        with open(time_mapping_file, 'r') as f:
+            data = json.load(f)
+        
+        if len(data) <= 1:
+            return True  # Empty or single item is always sorted
+        
+        # Convert to list of timestamp strings for comparison
+        timestamps = list(data.keys())
+        
+        # Check if timestamps are in ascending order
+        # This is O(n) and stops at first unsorted pair
+        for i in range(1, len(timestamps)):
+            if timestamps[i-1] > timestamps[i]:
+                print(f"Unsorted at position {i}: {timestamps[i-1]} > {timestamps[i]}")
+                return False
+        
+        print(f"Mapping file is properly sorted ({len(timestamps)} entries)")
+        return True
+        
+    except FileNotFoundError:
+        print(f"Mapping file '{time_mapping_file}' not found")
+        return False
+    except Exception as e:
+        print(f"Error checking sort order: {e}")
+        return False
+
+def quick_sort_check_memory(file_time_map):
+    """
+    Check if the in-memory file mapping is properly sorted by timestamps.
+    Checks: 1) First 5 entries are sorted, 2) Last 5 entries are sorted, 
+            3) All first 5 are smaller than all last 5 entries
+    
+    Args:
+        file_time_map (OrderedDict): Dictionary with datetime keys and file paths as values
+    
+    Returns:
+        bool: True if sorted, False otherwise
+    """
+    try:
+        if len(file_time_map) <= 1:
+            return True  # Empty or single item is always sorted
+        
+        # Get list of datetime objects (keys)
+        timestamps = list(file_time_map.keys())
+        n = len(timestamps)
+        
+        
+        # For larger mappings, check first 5, last 5, and cross-check
+        first_5 = timestamps[:5]
+        last_5 = timestamps[-5:]
+        
+        # Check if first 5 entries are sorted
+        for i in range(1, len(first_5)):
+            if first_5[i-1] > first_5[i]:
+                print(f"First 5 entries not sorted: {first_5[i-1]} > {first_5[i]}")
+                return False
+        
+        # Check if last 5 entries are sorted
+        for i in range(1, len(last_5)):
+            if last_5[i-1] > last_5[i]:
+                print(f"Last 5 entries not sorted: {last_5[i-1]} > {last_5[i]}")
+                return False
+        
+        # Check if ALL first 5 entries are smaller than ALL last 5 entries
+        # This ensures proper ordering between beginning and end of the mapping
+        max_first_5 = max(first_5)
+        min_last_5 = min(last_5)
+        
+        if max_first_5 >= min_last_5:
+            print(f"Ordering violation: max of first 5 ({max_first_5}) >= min of last 5 ({min_last_5})")
+            return False
+        
+        print(f"Quick sort check passed: first 5 sorted, last 5 sorted, proper ordering ({n} entries)")
+        return True
+            
+    except Exception as e:
+        print(f"Error in memory sort check: {e}")
+        return False
+
+def load_file_mapping(time_mapping_file):
     """Load existing file-to-time mapping from JSON."""
     try:
-        with open(mapping_file, 'r') as f:
+        with open(time_mapping_file, 'r') as f:
             data = json.load(f)
         
         # Convert string timestamps back to datetime objects
@@ -83,7 +175,7 @@ def load_file_mapping(mapping_file):
         print(f"Error loading mapping: {e}")
         return OrderedDict()
 
-def save_file_mapping(file_time_map, mapping_file):
+def save_file_mapping(file_time_map, time_mapping_file):
     """Save file-to-time mapping to JSON."""
     try:
         # Convert datetime objects to ISO format strings for JSON
@@ -91,7 +183,7 @@ def save_file_mapping(file_time_map, mapping_file):
         for timestamp, file_path in file_time_map.items():
             data[timestamp.isoformat()] = file_path
         
-        with open(mapping_file, 'w') as f:
+        with open(time_mapping_file, 'w') as f:
             json.dump(data, f, indent=2)
         
         print(f"Saved {len(file_time_map)} files to mapping")
@@ -100,13 +192,14 @@ def save_file_mapping(file_time_map, mapping_file):
         print(f"Error saving mapping: {e}")
         return False
 
-def update_file_mapping(directory, mapping_file='file_mapping.json'):
+def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.json'):
     """Update existing mapping with any new files found."""
-    # Load existing mapping
-    existing_mapping = load_file_mapping(mapping_file)
+    # Load existing mapping (already sorted)
+    existing_mapping = load_file_mapping(time_mapping_file)
     existing_files = set(existing_mapping.values())
     
-    # Scan for new files only
+    # Collect new files
+    new_files = {}
     new_files_found = 0
     
     for root, dirs, files in os.walk(directory):
@@ -127,20 +220,36 @@ def update_file_mapping(directory, mapping_file='file_mapping.json'):
                             datetime_str = date_part + time_part
                             file_datetime = datetime.strptime(datetime_str, "%y%m%d%H%M%S")
                             
-                            existing_mapping[file_datetime] = file_path
+                            new_files[file_datetime] = file_path
                             new_files_found += 1
                     except (ValueError, IndexError):
                         continue
     
-    # Re-sort the mapping
-    sorted_mapping = OrderedDict(sorted(existing_mapping.items()))
+    # If no new files, return existing mapping unchanged
+    if new_files_found == 0:
+        print("No new files found")
+        return existing_mapping
     
+    # Sort only the new files and append to existing mapping
+    sorted_new_files = sorted(new_files.items())
+    
+    # Append new files to existing mapping (no need to resort existing)
+    for timestamp, file_path in sorted_new_files:
+        existing_mapping[timestamp] = file_path
+
+    # Do a quick sorting check
+    if not quick_sort_check_memory(existing_mapping):
+        print("Warning: In-memory mapping is not sorted!")
+        # Sort here if issue
+        existing_mapping = OrderedDict(sorted(existing_mapping.items()))
+    else:
+        print("First 5 and last 5 entries are sorted")
+
     # Save updated mapping
-    save_file_mapping(sorted_mapping, mapping_file)
+    save_file_mapping(existing_mapping, time_mapping_file)
     
     print(f"Added {new_files_found} new files to mapping")
-    return sorted_mapping
-
+    return existing_mapping
 
 def main():
     config = load_config(config_file)
@@ -156,16 +265,15 @@ def main():
 
     # DEBUG 
     print(f"\nBase audio directory: {base_audio_directory}")
-    print(f"Number of files to analyze: {num_files_to_analyze}")
+    print(f"Number of files to analyze: {num_files_to_analyze}\n")
 
     # Update mapping with any new files (fast for incremental updates)
-    time_mapping = update_file_mapping(base_audio_directory, mapping_file)
+    time_mapping = update_file_mapping(base_audio_directory, time_mapping_file)
     
     if not time_mapping:
         print("No valid audio files found.")
         return
     
     
-
 if __name__ == "__main__":
     main()

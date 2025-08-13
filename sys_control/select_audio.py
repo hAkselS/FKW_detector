@@ -113,6 +113,50 @@ def create_dive_CSV(csv_directory, csv_name):
     except Exception as e:
         return False, f"Error creating CSV file: {str(e)}", None    
 
+def populate_dive_CSV(csv_directory, csv_name, sorted_new_files):
+    """
+    Populate an existing dive CSV file with new file entries.
+
+    Args:
+        csv_directory (str): Directory where the CSV file is stored.
+        csv_name (str): Name of the CSV file.
+        sorted_new_files (list): List of tuples (datetime, file_path) for new files.
+
+    Returns:
+        tuple: (success, message)
+    """
+    try:
+        csv_path = os.path.join(csv_directory, csv_name)
+
+        # Check if CSV exists
+        if not os.path.exists(csv_path):
+            return False, f"CSV file '{csv_name}' does not exist in {csv_directory}."
+
+        # Load existing DataFrame
+        df = pd.read_csv(csv_path)
+
+        # Prepare new rows
+        new_rows = []
+        for file_datetime, file_path in sorted_new_files:
+            new_rows.append({
+                "file_name": os.path.basename(file_path),
+                "start_time": file_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                "selected_for_sampling": False,
+                "dat_to_wave": False,
+                "wave_to_spectro": False,
+                "image_analyzed": False
+            })
+
+        # Append new rows
+        df = pd.concat([df, pd.DataFrame(new_rows)], ignore_index=True)
+
+        # Save updated CSV
+        df.to_csv(csv_path, index=False)
+
+        return True, f"Successfully added {len(new_rows)} new files to {csv_name}."
+
+    except Exception as e:
+        return False, f"Error populating CSV: {str(e)}"
 
 def is_mapping_sorted(time_mapping_file): # Currently not used! 
     """
@@ -284,6 +328,8 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     
     # Sort only the new files and append to existing mapping
     sorted_new_files = sorted(new_files.items())
+    #DEBUG 
+    print(f"sorted new files are of type {type(sorted_new_files)}")
     
     # Create CSV with date range name for new files
     if sorted_new_files:
@@ -299,14 +345,22 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
         csv_name = f"{first_str}-{last_str}.csv"
         
         # Create the CSV
-        success, message, csv_path = create_dive_CSV(csv_directory, csv_name)
-        
-        if success:
+        creation_success, creation_message, csv_path = create_dive_CSV(csv_directory, csv_name)
+
+        if creation_success:
             print(f"\n✓ Created CSV for new files: {csv_name}")
             print(f"  Time range: {first_timestamp} to {last_timestamp}")
-            print(f"  CSV path: {csv_path}\n")
+            print(f"  CSV path: {csv_path}")
+            # Populate the CSV with new files
+            populate_success, population_message = populate_dive_CSV(csv_directory, csv_name, sorted_new_files)
+
+            if populate_success:
+                print(f"\n✓ Successfully populated CSV with new files: {csv_name}")
+            else:
+                print(f"✗ Failed to populate CSV: {population_message}")
+
         else:
-            print(f"\n✗ Failed to create CSV: {message}\n")
+            print(f"\n✗ Failed to create CSV: {creation_message}\n")
     
 
     # Append new files to existing mapping (no need to resort existing)

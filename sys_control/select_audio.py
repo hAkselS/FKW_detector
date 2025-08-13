@@ -64,7 +64,7 @@ def load_config(config_file):
         print(f"Select Audio Error: Unexpected error loading '{config_file}': {str(e)}")
         return {}
     
-def create_dive_CSV(csv_directory, csv_name):
+def create_dive_csv(csv_directory, csv_name):
     """
     Create a CSV file for tracking dive analysis progress using pandas.
     
@@ -113,7 +113,7 @@ def create_dive_CSV(csv_directory, csv_name):
     except Exception as e:
         return False, f"Error creating CSV file: {str(e)}", None    
 
-def populate_dive_CSV(csv_directory, csv_name, sorted_new_files):
+def populate_dive_csv(csv_directory, csv_name, sorted_new_files):
     """
     Populate an existing dive CSV file with new file entries.
 
@@ -241,7 +241,7 @@ def quick_sort_check_memory(file_time_map):
             print(f"Ordering violation: max of first 5 ({max_first_5}) >= min of last 5 ({min_last_5})")
             return False
         
-        print(f"Quick sort check passed: first 5 sorted, last 5 sorted, proper ordering ({n} entries)")
+        print(f"\nQuick sort check passed: first 5 sorted, last 5 sorted, proper ordering ({n} entries)")
         return True
             
     except Exception as e:
@@ -281,15 +281,28 @@ def save_file_mapping(file_time_map, time_mapping_file):
         with open(time_mapping_file, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print(f"Saved {len(file_time_map)} files to mapping")
+        print(f"\nSaved {len(file_time_map)} files to mapping")
         return True
     except Exception as e:
         print(f"Error saving mapping: {e}")
         return False
 
-#TODO: NEXT UP: add the new files into a CSV
 def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.json'):
-    """Update existing mapping with any new files found."""
+    """
+    Update existing mapping with any new files found.
+
+    Args:
+        directory (str): The directory to scan for new files.
+        time_mapping_file (str): The path to the time mapping file.
+
+    Calls:
+        create_dive_csv: To create a new CSV file for the new audio files.
+        populate_dive_csv: To populate the created CSV file with the new audio files.
+        quick_sort_check: To perform a quick sort check on the new audio files.
+    
+    Returns:
+        str: The path to the created CSV file, or None if no new files were found.
+    """
     # Load existing mapping (already sorted)
     existing_mapping = load_file_mapping(time_mapping_file)
     existing_files = set(existing_mapping.values())
@@ -323,16 +336,15 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     
     # If no new files, return existing mapping unchanged
     if new_files_found == 0:
-        print("No new files found")
-        return existing_mapping
+        print("Update File Mapping: No new files found")
+        return None # Check this 
     
     # Sort only the new files and append to existing mapping
     sorted_new_files = sorted(new_files.items())
-    #DEBUG 
-    print(f"sorted new files are of type {type(sorted_new_files)}")
     
     # Create CSV with date range name for new files
     if sorted_new_files:
+        ''' Call create_dive_csv and populate_dive_csv '''
         # Get first and last timestamps from sorted new files
         first_timestamp = sorted_new_files[0][0]  # datetime object
         last_timestamp = sorted_new_files[-1][0]  # datetime object
@@ -345,14 +357,14 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
         csv_name = f"{first_str}-{last_str}.csv"
         
         # Create the CSV
-        creation_success, creation_message, csv_path = create_dive_CSV(csv_directory, csv_name)
+        creation_success, creation_message, csv_path = create_dive_csv(csv_directory, csv_name)
 
         if creation_success:
             print(f"\n✓ Created CSV for new files: {csv_name}")
             print(f"  Time range: {first_timestamp} to {last_timestamp}")
             print(f"  CSV path: {csv_path}")
             # Populate the CSV with new files
-            populate_success, population_message = populate_dive_CSV(csv_directory, csv_name, sorted_new_files)
+            populate_success, population_message = populate_dive_csv(csv_directory, csv_name, sorted_new_files)
 
             if populate_success:
                 print(f"\n✓ Successfully populated CSV with new files: {csv_name}")
@@ -379,7 +391,35 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     save_file_mapping(existing_mapping, time_mapping_file)
     
     print(f"Added {new_files_found} new files to mapping")
-    return existing_mapping
+    return csv_path  
+
+def select_files_for_sampling(csv_path, num_files_to_analyze):
+
+    df = pd.read_csv(csv_path)
+    num_files = len(df) 
+
+    if num_files == 0:
+        print(f"\n✗ No files found for sampling")
+        return False, "No files found for sampling", 0
+
+    if num_files <= num_files_to_analyze:
+        # Sample everything if the number of files is less than the target
+        df['selected_for_sampling'] = True
+        # Save the file 
+        df.to_csv(csv_path, index=False)
+        print(f"\n✓ Selected files {num_files} for sampling (num files < num files to analyze)")
+        return True, f"Selected all {num_files} files for sampling", {num_files}    
+
+    else: # TODO: logic is wrong... did more than max sample 
+       # DEBUG
+       print(f'\nElse hit in select files for sampling')
+       # Sample evenly while excluding the first and last 10 files
+       df['selected_for_sampling'] = False # Ensure no Trues when starting  
+       step = max(1, (num_files - 20) // num_files_to_analyze)
+       df.iloc[10::step, df.columns.get_loc('selected_for_sampling')] = True
+       df.to_csv(csv_path, index=False)
+       print(f"\n✓ Selected files for sampling (num files > num files to analyze)")
+       return True, f"Selected files for sampling", df['selected_for_sampling'].sum()
 
 def main():
     config = load_config(config_file)
@@ -398,12 +438,13 @@ def main():
     print(f"Number of files to analyze: {num_files_to_analyze}\n")
 
     # Update mapping with any new files (fast for incremental updates)
-    time_mapping = update_file_mapping(base_audio_directory, time_mapping_file)
-    
-    if not time_mapping:
-        print("No valid audio files found.")
+    csv_path = update_file_mapping(base_audio_directory, time_mapping_file)
+
+    if not csv_path:
+        print("No new audio files found. Exiting...")
         return
-    
-    
+
+    select_files_for_sampling(csv_path, num_files_to_analyze)
+
 if __name__ == "__main__":
     main()

@@ -28,10 +28,14 @@ wave_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/wave_outputs
 spectro_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/spectro_outputs'
 inference_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/inference_outputs'
 
+# Read the CSV file
+df = pandas.read_csv(input_csv)
+for file_name in df.loc[df["selected_for_sampling"] == True, "file_name"]:
 
+    print(file_name)
 
-status, message, output_file_path = dat_to_wav.convert_dat_to_wav(input_file, wave_output_dir)
-print(f"\nDAT to WAV conversion status: {status}, Message: {message}, Output File: {output_file_path}")
+# status, message, output_file_path = dat_to_wav.convert_dat_to_wav(input_file, wave_output_dir)
+# print(f"\nDAT to WAV conversion status: {status}, Message: {message}, Output File: {output_file_path}")
 
-status, message, files = audio_to_spectro.process_audio_to_spectrograms(output_file_path, '/Users/akselsloan/FKW_detector/images')
-print(f"\nAudio transform status: {status}, Message: {message}, Files: {files}")
+# status, message, files = audio_to_spectro.process_audio_to_spectrograms(output_file_path, '/Users/akselsloan/FKW_detector/images')
+# print(f"\nAudio transform status: {status}, Message: {message}, Files: {files}")

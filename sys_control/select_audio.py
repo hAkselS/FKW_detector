@@ -7,15 +7,15 @@ Spec:   Maintain JSON file with time ranges for each analyzed
 
 Super Spec: This script uses update_file_mapping to look at all
         the past audio files, stored in observed_audio_and_times.json, that
-        have been previously analyzed or counted and compares that to the current
-        files in the directory to determine what are new.
-        New files are added to a list, sorted and added to the JSON in order.
-        It is assumed that the JSON is sorted.
-        All of the new files ALSO go into a CSV file who's title is the time
-        range of all the new files. Once in the CSV, a subset of the new
+        have been previously analyzed or counted and compares the list of files 
+        to the contents of the active directory to determine which file are new and therefor unanalyzed.
+        New files are added to a list, sorted then added to the JSON in sorted order.
+        This allows the JSON file to remain sorted which provides faster and more efficient searching. 
+        The list of new files ALSO goes into a CSV file who's title is the time
+        range of the new files. Once in the CSV, a subset of the new
         files will be selected for sampling by setting the 'selected_for_sampling'
-        flag to True in the CSV. This CSV is looked at by transform and inference
-        to determine which files to analyze. 
+        flag to True in the CSV. The CSV is returned by main for use in Transform and Inference. 
+        Transform and Inference uses the CSV to determine which files to analyze. 
 
 Notes:  !!! This script uses main and does not receive any arguments !!!
         This script adds new files to the existing list of files that have been analyzed on
@@ -394,6 +394,12 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
         return True, f"Selected files for sampling", df['selected_for_sampling'].sum()
 
 def main():
+    '''
+    Args: None
+
+    Returns: str path to the populated CSV file. 
+    '''
+
     config = load_config(config_file)
     if not config:
         print("Failed to load configuration.")
@@ -414,9 +420,11 @@ def main():
 
     if not csv_path:
         print("No new audio files found. Exiting...")
-        return
+        return '' 
 
     select_files_for_sampling(csv_path, num_files_to_analyze)
+
+    return csv_path # Return the path to the CSV file for use in transform and inference
 
 if __name__ == "__main__":
     main()

@@ -1,25 +1,26 @@
 '''
 File:   sys_control/select_audio.py
 
-Spec:   Maintain CSV file with time ranges for each analyzed
+Spec:   Maintain JSON file with time ranges for each analyzed
         ascent / descent. Create a CSV file for each ascent / descent
         with a list of audio files to process and success flags.
 
-Super Spec:   List files in the ascent / descent directories.
-        Convert file names to times. 
-        Save files names nad times into a json 
-        Determine if there are any new files to process.
-        If there are new files, determine their time ranges.
-        Add all of the files to a CSV who's title reflects the time range. 
-        Select images for sampling. Set true a "selected for sampling" flag.
-        Pass the CSV file to transform and inference.
-        Finish, return success. 
+Super Spec: This script uses update_file_mapping to look at all
+        the past audio files, stored in observed_audio_and_times.json, that
+        have been previously analyzed or counted and compares that to the current
+        files in the directory to determine what are new.
+        New files are added to a list, sorted and added to the JSON in order.
+        It is assumed that the JSON is sorted.
+        All of the new files ALSO go into a CSV file who's title is the time
+        range of all the new files. Once in the CSV, a subset of the new
+        files will be selected for sampling by setting the 'selected_for_sampling'
+        flag to True in the CSV. This CSV is looked at by transform and inference
+        to determine which files to analyze. 
 
 Notes:  !!! This script uses main and does not receive any arguments !!!
+        This script adds new files to the existing list of files that have been analyzed on
+        the assumption that the new files all represent times AFTER the last existing file. 
 '''
-# TODO: This script adds new files to the existing list of files that have been analyzed on
-#       the assumption that the new files all represent times AFTER the last existing file.   
-
 import yaml 
 import os 
 import pandas as pd
@@ -157,43 +158,6 @@ def populate_dive_csv(csv_directory, csv_name, sorted_new_files):
 
     except Exception as e:
         return False, f"Error populating CSV: {str(e)}"
-
-def is_mapping_sorted(time_mapping_file): # Currently not used! 
-    """
-    Efficiently check if the JSON mapping file is properly sorted by timestamps.
-    
-    Args:
-        time_mapping_file (str): Path to the JSON mapping file
-    
-    Returns:
-        bool: True if sorted, False if not sorted or file doesn't exist
-    """
-    try:
-        with open(time_mapping_file, 'r') as f:
-            data = json.load(f)
-        
-        if len(data) <= 1:
-            return True  # Empty or single item is always sorted
-        
-        # Convert to list of timestamp strings for comparison
-        timestamps = list(data.keys())
-        
-        # Check if timestamps are in ascending order
-        # This is O(n) and stops at first unsorted pair
-        for i in range(1, len(timestamps)):
-            if timestamps[i-1] > timestamps[i]:
-                print(f"Unsorted at position {i}: {timestamps[i-1]} > {timestamps[i]}")
-                return False
-        
-        print(f"Mapping file is properly sorted ({len(timestamps)} entries)")
-        return True
-        
-    except FileNotFoundError:
-        print(f"Mapping file '{time_mapping_file}' not found")
-        return False
-    except Exception as e:
-        print(f"Error checking sort order: {e}")
-        return False
 
 def quick_sort_check_memory(file_time_map):
     """
@@ -410,16 +374,24 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
         print(f"\n✓ Selected files {num_files} for sampling (num files < num files to analyze)")
         return True, f"Selected all {num_files} files for sampling", {num_files}    
 
-    else: # TODO: logic is wrong... did more than max sample 
-       # DEBUG
-       print(f'\nElse hit in select files for sampling')
-       # Sample evenly while excluding the first and last 10 files
-       df['selected_for_sampling'] = False # Ensure no Trues when starting  
-       step = max(1, (num_files - 20) // num_files_to_analyze)
-       df.iloc[10::step, df.columns.get_loc('selected_for_sampling')] = True
-       df.to_csv(csv_path, index=False)
-       print(f"\n✓ Selected files for sampling (num files > num files to analyze)")
-       return True, f"Selected files for sampling", df['selected_for_sampling'].sum()
+    else: 
+        # Sample evenly across the dataset
+        df['selected_for_sampling'] = False # Ensure no Trues when starting  
+        step = max(1, num_files // num_files_to_analyze)
+        # DEBUG
+        # print(f'\nnum files to analyze = {num_files_to_analyze}')
+        # print(f'num files = {num_files}')
+        # print(f'step = {step}')
+
+        files_analyzed = 0 
+        for i in range(0, num_files, step): 
+            if i < num_files and files_analyzed < num_files_to_analyze:
+                df.iloc[i, df.columns.get_loc('selected_for_sampling')] = True
+                files_analyzed += 1 
+
+        df.to_csv(csv_path, index=False)
+        print(f"\n✓ Selected files for sampling (num files > num files to analyze)")
+        return True, f"Selected files for sampling", df['selected_for_sampling'].sum()
 
 def main():
     config = load_config(config_file)

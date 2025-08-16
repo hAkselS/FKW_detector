@@ -140,7 +140,7 @@ def populate_dive_csv(csv_directory, csv_name, sorted_new_files):
         new_rows = []
         for file_datetime, file_path in sorted_new_files:
             new_rows.append({
-                "file_name": os.path.basename(file_path),
+                "file_name": file_path,
                 "start_time": file_datetime.strftime("%Y-%m-%d %H:%M:%S"),
                 "selected_for_sampling": False,
                 "dat_to_wave": False,
@@ -274,8 +274,11 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     # Collect new files
     new_files = {}
     new_files_found = 0
-    
+
     for root, dirs, files in os.walk(directory):
+        # DEBUg 
+        # print(f"Scanning: {root}")
+        # print(f"Files: {files}")
         for filename in files:
             if filename.endswith('.dat'):
                 file_path = os.path.join(root, filename)

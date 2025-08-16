@@ -28,6 +28,7 @@ wave_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/wave_outputs
 spectro_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/spectro_outputs'
 inference_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/inference_outputs'
 
+
 # Read the CSV file
 df = pandas.read_csv(input_csv)
 for file_name in df.loc[df["selected_for_sampling"] == True, "file_name"]:

@@ -74,7 +74,9 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
         if current_length_samples < target_length_samples:
             padding_needed = target_length_samples - current_length_samples
             padding_seconds = padding_needed / sample_rate
-            print(f"\nInserting noise padding audio: adding {padding_seconds:.3f} seconds of noise to reach 60 seconds total")
+            
+            # DEBUG
+            # print(f"\nInserting noise padding audio: adding {padding_seconds:.3f} seconds of noise to reach 60 seconds total")
             
             # Add noise to the end of the audio data (instead of constant values)
             # Generate pink/brown noise in the frequency range of interest
@@ -125,7 +127,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
             )
             output_files.append(output_file)
         
-        return True, f"Successfully processed {audio_file_name}: generated {len(output_files)} spectrograms from {num_chunks} audio chunks (duration: {len(data)/sample_rate:.1f}s)", output_files
+        return True, f"Successfully processed {audio_file_name}: generated {len(output_files)} spectrograms: Added {padding_seconds:.3f} of padding.", output_files
         
 
         

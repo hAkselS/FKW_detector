@@ -29,7 +29,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ###################################################################
 
-def perform_inference(input_files, output_directory=project_root + '/images'):
+def perform_inference(input_files, output_directory=project_root + '/logs/inference_logs'):
     """
     Perform YOLO inference on a list of image files.
     
@@ -39,7 +39,7 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
         confidence (float): Confidence threshold for detections
     
     Returns:
-        tuple: (success, message, results_dict)
+        tuple: (success, message, output directory)
     """
     try:
         # Check if model file exists
@@ -91,6 +91,8 @@ def perform_inference(input_files, output_directory=project_root + '/images'):
             except Exception as e:
                 return False, f"Failed to process {file_path}: {str(e)}"
        
+        # Add results to a CSV file # TODO
+        
         success_message = f"Successfully processed {len(input_files)} files, found {total_detections} detections"
         return True, success_message
         

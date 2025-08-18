@@ -30,7 +30,8 @@ def reduce_sample_size(file_name):
         # Read the original .wav file
         data, samplerate = sf.read(file_name)  
         sf.write(file_name, data, samplerate, subtype=target_sample_size)
-        print(f"Reduced sample size of '{file_name}' to {target_sample_size}.")
+        # TODO: include in logging, but don't print 
+        # print(f"Reduced sample size of '{file_name}' to {target_sample_size}.")
         return True
     except Exception as e:
         print(f"Error reducing sample size of '{file_name}': {e}")
@@ -78,8 +79,8 @@ def convert_dat_to_wav(input_dat_file, output_directory):
             
             if channels == None:
                 channels = 1 # Default to mono if not specified
-            # DEBUG
-            print(f"Header values: sampling_rate={sampling_rate}, channels={channels}, sample_size={sample_size}, file_size={file_size}\n")
+            # DEBUG / TODO: add to logging 
+            # print(f"Header values: sampling_rate={sampling_rate}, channels={channels}, sample_size={sample_size}, file_size={file_size}\n")
 
             # Validate header values
             if None in (sampling_rate, channels, sample_size, file_size):

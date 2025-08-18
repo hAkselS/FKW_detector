@@ -10,11 +10,9 @@ I/O:    This program expects one or more spectrogram images as inputs.
 '''
 
 from ultralytics import YOLO
-import argparse
 import os
 import sys
-import json
-from datetime import datetime
+import pandas as pd 
 
 
 
@@ -87,27 +85,85 @@ def perform_inference(input_files, output_directory=project_root + '/logs/infere
                 
                 file_results['detection_count'] = len(file_results['detections'])
                 total_detections += file_results['detection_count']
-                
+
+                # Save results to CSV
+                # TODO: Save this to a meaningful location and with a meaningful file name!!!!!
+                success, message = save_results(file_results, f'logs/inference_logs/bobby.csv') #csv_file_path)
+                if not success:
+                    print(f"Warning: {message}")
+
             except Exception as e:
                 return False, f"Failed to process {file_path}: {str(e)}"
        
-        # Add results to a CSV file # TODO
-        
         success_message = f"Successfully processed {len(input_files)} files, found {total_detections} detections"
         return True, success_message
         
     except Exception as e:
         return False, f"Inference error: {str(e)}"
 
-def save_results(results_dict, output_file): # TODO: set this up to save results in results.csv format.
-    """Save inference results to a JSON file."""
+
+def save_results(results_dict, csv_file_path):
+    """
+    Save inference results to a CSV file using pandas with each detection as one row.
+    
+    Args:
+        results_dict (dict): Detection results from inference
+        csv_file_path (str): Path where CSV file will be saved
+    
+    Returns:
+        tuple: (success, message)
+    """
     try:
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        with open(output_file, 'w') as f:
-            json.dump(results_dict, f, indent=2)
-        return True, f"Results saved to {output_file}"
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
+        
+        file_path = results_dict.get('file_path', 'Unknown')
+        total_detections = results_dict.get('detection_count', 0)
+        detections = results_dict.get('detections', [])
+        
+        # Prepare data for DataFrame
+        data = []
+        
+        if detections:
+            for detection in detections:
+                # Format bounding box as "x1,y1,x2,y2"
+                bbox = detection.get('bbox', [])
+                bbox_str = ",".join([str(round(coord, 2)) for coord in bbox]) if bbox else ""
+                
+                data.append({
+                    'file_path': file_path,
+                    'class_name': detection.get('class_name', 'Unknown'),
+                    'class_id': detection.get('class_id', -1),
+                    'confidence': round(detection.get('confidence', 0.0), 4),
+                    'bounding_box': bbox_str,
+                    'number_of_detections': total_detections
+                })
+        else:
+            # No detections found - create one row with zeros
+            data.append({
+                'file_path': file_path,
+                'class_name': 'None',
+                'class_id': -1,
+                'confidence': 0.0,
+                'bounding_box': '',
+                'number_of_detections': 0
+            })
+        
+        # Create DataFrame
+        df = pd.DataFrame(data)
+        
+        # Append to existing CSV or create new one
+        if os.path.exists(csv_file_path):
+            # Append to existing file without headers
+            df.to_csv(csv_file_path, mode='a', header=False, index=False)
+        else:
+            # Create new file with headers
+            df.to_csv(csv_file_path, mode='w', header=True, index=False)
+        
+        return True, f"Successfully saved {len(data)} detection rows to CSV"
+        
     except Exception as e:
-        return False, f"Failed to save results: {str(e)}"
+        return False, f"Error saving detections to CSV: {str(e)}"
 
 def main():
     print("This program should not be run directly. Use system_control/transform_and_inference.py instead.")

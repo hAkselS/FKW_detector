@@ -45,12 +45,22 @@ for file_name in df.loc[df["selected_for_sampling"] == True, "file_name"]:
 
     # Convert wav to spectrogram
     if dat_status:
-        spectro_status, spectro_message, spectro_files_list = audio_to_spectro.process_audio_to_spectrograms(dat_out_path, spectro_output_dir)
-        # DEBUG
-        # print(f'{spectro_message}\n')
+        # Log that dat to wave is complete
+        df.loc[df["file_name"] == file_name, "dat_to_wave"] = True 
+        df.to_csv(input_csv, index=False)  # Save again
 
+        # Convert wave to spectrogram
+        spectro_status, spectro_message, spectro_files_list = audio_to_spectro.process_audio_to_spectrograms(dat_out_path, spectro_output_dir)
+       
         # Run inference on spectrograms
         if spectro_status:
+            # Log that wave to spectrogram is complete
+            df.loc[df["file_name"] == file_name, "wave_to_spectro"] = True
+            df.to_csv(input_csv, index=False)  # Save again
+
             inference_status, inference_message = inference.perform_inference(spectro_files_list, inference_output_dir+ f'/{csv_filename}_detections.csv')
-            # DEBUG
-            print(f'{inference_message}\n')
+
+            if inference_status:
+                # Log that inference is complete
+                df.loc[df["file_name"] == file_name, "image_analyzed"] = True
+                df.to_csv(input_csv, index=False)  # Save again

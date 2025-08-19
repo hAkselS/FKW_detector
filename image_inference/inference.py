@@ -27,14 +27,15 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ###################################################################
 
-def perform_inference(input_files, output_directory=project_root + '/logs/inference_logs'):
+def perform_inference(input_files, output_file_name_and_path):
     """
     Perform YOLO inference on a list of image files.
     
     Args:
         input_files (list): List of paths to image files
         model_path (str): Path to the YOLO model file
-        confidence (float): Confidence threshold for detections
+        results_file_name_and_path (str): Path to the results CSV file
+        TODO: confidence (float): Confidence threshold for detections
     
     Returns:
         tuple: (success, message, output directory)
@@ -71,7 +72,7 @@ def perform_inference(input_files, output_directory=project_root + '/logs/infere
                 }
                 
                 # Process detections
-                for result in results: # TODO: use existing FKW tools as a template for this (just return number of positive detections and confidence level.)
+                for result in results: 
                     boxes = result.boxes
                     if boxes is not None:
                         for box in boxes:
@@ -87,8 +88,7 @@ def perform_inference(input_files, output_directory=project_root + '/logs/infere
                 total_detections += file_results['detection_count']
 
                 # Save results to CSV
-                # TODO: Save this to a meaningful location and with a meaningful file name!!!!!
-                success, message = save_results(file_results, f'logs/inference_logs/bobby.csv') #csv_file_path)
+                success, message = save_results(file_results, output_file_name_and_path) #csv_file_path)
                 if not success:
                     print(f"Warning: {message}")
 

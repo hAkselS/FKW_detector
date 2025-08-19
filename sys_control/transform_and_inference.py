@@ -24,10 +24,13 @@ import image_inference.inference as inference
 
 # TODO: get input CSV from process control
 input_csv = '/Users/akselsloan/FKW_detector/logs/dive_logs/240930_000003-241001_000449.csv'
-wave_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/wave_outputs'
-spectro_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/spectro_outputs'
-inference_output_dir = '/Users/akselsloan/FKW_detector/scratch_materials/inference_outputs'
+# TODO: finalize how these directories are found on the pi 
+wave_output_dir = '/Users/akselsloan/FKW_detector/data_products/wave_outputs'
+spectro_output_dir = '/Users/akselsloan/FKW_detector/data_products/spectro_outputs'
+inference_output_dir = '/Users/akselsloan/FKW_detector/data_products/inference_outputs'
 
+# Get the CSV file name for later use
+csv_filename = os.path.splitext(os.path.basename(input_csv))[0]
 
 # Read the CSV file
 df = pandas.read_csv(input_csv)
@@ -48,6 +51,6 @@ for file_name in df.loc[df["selected_for_sampling"] == True, "file_name"]:
 
         # Run inference on spectrograms
         if spectro_status:
-            inference_status, inference_message = inference.perform_inference(spectro_files_list, inference_output_dir)
+            inference_status, inference_message = inference.perform_inference(spectro_files_list, inference_output_dir+ f'/{csv_filename}_detections.csv')
             # DEBUG
             print(f'{inference_message}\n')

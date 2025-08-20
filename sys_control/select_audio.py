@@ -20,6 +20,8 @@ Super Spec: This script uses update_file_mapping to look at all
 Notes:  !!! This script uses main and does not receive any arguments !!!
         This script adds new files to the existing list of files that have been analyzed on
         the assumption that the new files all represent times AFTER the last existing file. 
+    
+ID:     sa 
 '''
 import yaml 
 import os 
@@ -56,13 +58,13 @@ def load_config(config_file):
             config = yaml.safe_load(file)
         
         if config is None:
-            print(f"Error: Configuration file '{config_file}' is empty or invalid")
+            print(f"sa: Error: Configuration file '{config_file}' is empty or invalid")
             return {}
             
         return config
     
     except Exception as e:
-        print(f"Select Audio Error: Unexpected error loading '{config_file}': {str(e)}")
+        print(f"sa: Select Audio Error: Unexpected error loading '{config_file}': {str(e)}")
         return {}
     
 def create_dive_csv(csv_directory, csv_name):
@@ -187,13 +189,13 @@ def quick_sort_check_memory(file_time_map):
         # Check if first 5 entries are sorted
         for i in range(1, len(first_5)):
             if first_5[i-1] > first_5[i]:
-                print(f"First 5 entries not sorted: {first_5[i-1]} > {first_5[i]}")
+                print(f"sa: First 5 entries not sorted: {first_5[i-1]} > {first_5[i]}")
                 return False
         
         # Check if last 5 entries are sorted
         for i in range(1, len(last_5)):
             if last_5[i-1] > last_5[i]:
-                print(f"Last 5 entries not sorted: {last_5[i-1]} > {last_5[i]}")
+                print(f"sa: Last 5 entries not sorted: {last_5[i-1]} > {last_5[i]}")
                 return False
         
         # Check if ALL first 5 entries are smaller than ALL last 5 entries
@@ -202,10 +204,10 @@ def quick_sort_check_memory(file_time_map):
         min_last_5 = min(last_5)
         
         if max_first_5 >= min_last_5:
-            print(f"Ordering violation: max of first 5 ({max_first_5}) >= min of last 5 ({min_last_5})")
+            print(f"sa: Ordering violation: max of first 5 ({max_first_5}) >= min of last 5 ({min_last_5})")
             return False
         
-        print(f"\nQuick sort check passed: first 5 sorted, last 5 sorted, proper ordering ({n} entries)")
+        print(f"\nsa: Quick sort check passed: first 5 sorted, last 5 sorted, proper ordering ({n} entries)")
         return True
             
     except Exception as e:
@@ -224,14 +226,14 @@ def load_file_mapping(time_mapping_file):
             timestamp = datetime.fromisoformat(timestamp_str)
             file_time_map[timestamp] = file_path
         
-        print(f"Loaded {len(file_time_map)} files from existing mapping")
+        print(f"sa: Loaded {len(file_time_map)} files from existing mapping")
         return file_time_map
         
     except FileNotFoundError:
-        print("No existing mapping found, creating new one")
+        print("sa: No existing mapping found, creating new one")
         return OrderedDict()
     except Exception as e:
-        print(f"Error loading mapping: {e}")
+        print(f"sa: Error loading mapping: {e}")
         return OrderedDict()
 
 def save_file_mapping(file_time_map, time_mapping_file):
@@ -245,10 +247,10 @@ def save_file_mapping(file_time_map, time_mapping_file):
         with open(time_mapping_file, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print(f"\nSaved {len(file_time_map)} files to mapping")
+        print(f"\nsa: Saved {len(file_time_map)} files to mapping")
         return True
     except Exception as e:
-        print(f"Error saving mapping: {e}")
+        print(f"sa: Error saving mapping: {e}")
         return False
 
 def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.json'):
@@ -303,7 +305,7 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     
     # If no new files, return existing mapping unchanged
     if new_files_found == 0:
-        print("Update File Mapping: No new files found")
+        print("sa: Update File Mapping: No new files found")
         return None # Check this 
     
     # Sort only the new files and append to existing mapping
@@ -327,19 +329,19 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
         creation_success, creation_message, csv_path = create_dive_csv(csv_directory, csv_name)
 
         if creation_success:
-            print(f"\n✓ Created CSV for new files: {csv_name}")
-            print(f"  Time range: {first_timestamp} to {last_timestamp}")
-            print(f"  CSV path: {csv_path}")
+            print(f"\nsa: ✓ Created CSV for new files: {csv_name}")
+            print(f"  sa: Time range: {first_timestamp} to {last_timestamp}")
+            print(f"  sa: CSV path: {csv_path}")
             # Populate the CSV with new files
             populate_success, population_message = populate_dive_csv(csv_directory, csv_name, sorted_new_files)
 
             if populate_success:
                 print(f"\n✓ Successfully populated CSV with new files: {csv_name}")
             else:
-                print(f"✗ Failed to populate CSV: {population_message}")
+                print(f"sa: ✗ Failed to populate CSV: {population_message}")
 
         else:
-            print(f"\n✗ Failed to create CSV: {creation_message}\n")
+            print(f"\nsa: ✗ Failed to create CSV: {creation_message}\n")
     
 
     # Append new files to existing mapping (no need to resort existing)
@@ -348,16 +350,16 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
 
     # Do a quick sorting check
     if not quick_sort_check_memory(existing_mapping):
-        print("Warning: In-memory mapping is not sorted!")
+        print("sa: Warning: In-memory mapping is not sorted!")
         # Sort here if issue
         existing_mapping = OrderedDict(sorted(existing_mapping.items()))
     else:
-        print("First 5 and last 5 entries are sorted")
+        print("sa: First 5 and last 5 entries are sorted")
 
     # Save updated mapping
     save_file_mapping(existing_mapping, time_mapping_file)
-    
-    print(f"Added {new_files_found} new files to mapping")
+
+    print(f"sa: Added {new_files_found} new files to mapping")
     return csv_path  
 
 def select_files_for_sampling(csv_path, num_files_to_analyze):
@@ -421,8 +423,8 @@ def main():
     num_files_to_analyze = config['num_files_to_analyze']
 
     # DEBUG 
-    print(f"\nBase audio directory: {base_audio_directory}")
-    print(f"Number of files to analyze: {num_files_to_analyze}\n")
+    print(f"\nsa: Base audio directory: {base_audio_directory}")
+    print(f"sa: Number of files to analyze: {num_files_to_analyze}\n")
 
     # Update mapping with any new files (fast for incremental updates)
     csv_path = update_file_mapping(base_audio_directory, time_mapping_file)

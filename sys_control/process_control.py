@@ -4,6 +4,8 @@ File:   sys_control/process_control.py
 Spec:   Handle all processes and their orderings. 
 
 Usage:  python3 sys_control/process_control.py 
+
+ID:     pc 
 '''
 
 import sys
@@ -26,10 +28,12 @@ import sys_control.select_audio as select_audio
 
 # Call select audio 
 select_status, select_message, path_to_dive_csv = select_audio.main()
-# TODO: don't call transform if there are no new files. 
+print(f"pc: Select Audio Status: {select_status}, Message: {select_message}\n")
 
 # Call transform and inference with output from select audio
-trans_status, trans_message = transform_and_inference.process_audio_and_inference(path_to_dive_csv)
-print(f"Transform and Inference Status: {trans_status}, Message: {trans_message}")
+if select_status:
+    trans_status, trans_message = transform_and_inference.process_audio_and_inference(path_to_dive_csv)
+    print(f"pc: Transform and Inference Status: {trans_status}, Message: {trans_message}")
+
 
 # TODO: Set the forced shutdown flag false

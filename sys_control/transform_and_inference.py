@@ -8,6 +8,8 @@ Spec:   Repeatedly transfrom then infer on selected wave files.
         and for inferencing the spectrogram.
 
 Usage:  python3 system_control/transform_and_inference.py 
+
+ID:     ti
 '''
 
 import sys
@@ -62,15 +64,15 @@ def process_audio_and_inference(input_csv): # Input CSV with file path
                     spectrograms_processed += 2 # Two spectrograms processed every time the inference status returns True
 
         df.to_csv(input_csv, index=False)  # Write updated CSV to memory
-        print(f'transform_and_inference: processed {file_name}')
-    print(f'transform_and_inference: analyzed {spectrograms_processed} spectrograms')
+        print(f'ti: transform_and_inference: processed {file_name}')
+    print(f'ti: transform_and_inference: analyzed {spectrograms_processed} spectrograms')
     
     # TODO: make this message more meaningful 
     return True, f"Processed {spectrograms_processed} spectrograms"
 
 def main():
     
-    print('transform_and_inference: this program should not be run directly')
+    print('ti: this program should not be run directly')
     
     # TODO: Remove block, this is only used for testing 
     input_csv = '/Users/akselsloan/FKW_detector/logs/dive_logs/240930_000003-241001_000449.csv'

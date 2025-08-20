@@ -398,15 +398,21 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
 
 def main():
     '''
-    Args: None
+    Main function for select_audio.py
+    
+    Args: 
+        None
 
-    Returns: str path to the populated CSV file. 
+    Returns: 
+        tuple: (success, message, csv_path)
+        - success (bool): True if successful, False if failed
+        - message (str): Status message describing what happened
+        - csv_path (str): Path to the created CSV file, or empty string if failed
     '''
 
     config = load_config(config_file)
     if not config:
-        print("Failed to load configuration.")
-        return
+        return False, "Failed to load configuration.", ''
 
     # Continue with the main logic using the loaded config
     print("Configuration loaded successfully.")
@@ -422,12 +428,15 @@ def main():
     csv_path = update_file_mapping(base_audio_directory, time_mapping_file)
 
     if not csv_path:
-        print("No new audio files found. Exiting...")
-        return '' 
+        return False, "No new audio files found.", ''
 
-    select_files_for_sampling(csv_path, num_files_to_analyze)
-
-    return csv_path # Return the path to the CSV file for use in transform and inference
+    select_status, select_message, num_selected = select_files_for_sampling(csv_path, num_files_to_analyze)
+    
+    if not select_status:
+        return False, f"File selection failed: {select_message}", csv_path
+    
+    success_message = f"Successfully processed audio files. Selected {num_selected} files for sampling from CSV: {csv_path}"
+    return True, success_message, csv_path # CSV path is used in transform and inference! 
 
 if __name__ == "__main__":
     main()

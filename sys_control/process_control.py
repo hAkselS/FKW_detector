@@ -14,9 +14,8 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 import sys_control.transform_and_inference as transform_and_inference
-import audio_transform.audio_to_spectro as audio_to_spectro
-import audio_transform.dat_to_wav as dat_to_wav
-import image_inference.inference as inference
+import sys_control.select_audio as select_audio
+
 
 
 # TODO: Check to make sure the forced shutdown flag is false 
@@ -25,9 +24,12 @@ import image_inference.inference as inference
 
 # TODO: Create a timer the shuts down the pi after X minutes 
 
-# TODO: call select audio 
+# Call select audio 
+select_status, select_message, path_to_dive_csv = select_audio.main()
+# TODO: don't call transform if there are no new files. 
 
-
-# TODO: call transform and inference with output from select audio
+# Call transform and inference with output from select audio
+trans_status, trans_message = transform_and_inference.process_audio_and_inference(path_to_dive_csv)
+print(f"Transform and Inference Status: {trans_status}, Message: {trans_message}")
 
 # TODO: Set the forced shutdown flag false

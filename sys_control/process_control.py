@@ -27,6 +27,7 @@ config_file = project_root + '/config.yaml'
 
 # print(f'Config file = {config_file}')
 
+# TODO: WRITING TO YAML ERASES ALL ITS COMMENTS
 # # Open the config file 
 # try:
 #     with open(config_file, 'r') as file:

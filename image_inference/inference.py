@@ -154,7 +154,7 @@ def save_results(results_dict, csv_file_path):
             # No detections found - create one row with zeros
             data.append({
                 'file_path': file_path,
-                'start_time': 'Unknown',
+                'start_time': start_time,
                 'class_name': 'None',
                 'class_id': -1,
                 'confidence': 0.0,

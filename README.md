@@ -1,4 +1,4 @@
-### FKW_detector
+# FKW_detector
 ## Code written for underwater SeaGliders. 
 
 This repository allows the glider to analyze a subset

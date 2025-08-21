@@ -124,7 +124,7 @@ def save_results(results_dict, csv_file_path):
 
         # Find the start time 
         file_name = os.path.basename(file_path)   # WISPR_240930_000003-0001.jpg
-        parts = file_name[6:-4]
+        parts = file_name[6:-9]
         if '_' in parts:
             date_part, time_part = parts.split('_')
             datetime_str = date_part + time_part

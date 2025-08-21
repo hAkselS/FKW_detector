@@ -13,6 +13,7 @@ from ultralytics import YOLO
 import os
 import sys
 import pandas as pd 
+from datetime import datetime
 
 
 
@@ -120,6 +121,16 @@ def save_results(results_dict, csv_file_path):
         file_path = results_dict.get('file_path', 'Unknown')
         total_detections = results_dict.get('detection_count', 0)
         detections = results_dict.get('detections', [])
+
+        # Find the start time 
+        file_name = os.path.basename(file_path)   # WISPR_240930_000003-0001.jpg
+        parts = file_name[6:-4]
+        if '_' in parts:
+            date_part, time_part = parts.split('_')
+            datetime_str = date_part + time_part
+            file_datetime = datetime.strptime(datetime_str, "%y%m%d%H%M%S")
+        start_time = file_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
         
         # Prepare data for DataFrame
         data = []
@@ -132,6 +143,7 @@ def save_results(results_dict, csv_file_path):
                 
                 data.append({
                     'file_path': file_path,
+                    'start_time': start_time,
                     'class_name': detection.get('class_name', 'Unknown'),
                     'class_id': detection.get('class_id', -1),
                     'confidence': round(detection.get('confidence', 0.0), 4),
@@ -142,6 +154,7 @@ def save_results(results_dict, csv_file_path):
             # No detections found - create one row with zeros
             data.append({
                 'file_path': file_path,
+                'start_time': 'Unknown',
                 'class_name': 'None',
                 'class_id': -1,
                 'confidence': 0.0,

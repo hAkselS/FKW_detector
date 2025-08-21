@@ -64,8 +64,8 @@ def process_audio_and_inference(input_csv): # Input CSV with file path
                     spectrograms_processed += 2 # Two spectrograms processed every time the inference status returns True
 
         df.to_csv(input_csv, index=False)  # Write updated CSV to memory
-        print(f'ti: transform_and_inference: processed {file_name}')
-    print(f'ti: transform_and_inference: analyzed {spectrograms_processed} spectrograms')
+        print(f'ti: processed {file_name}')
+    print(f'ti: analyzed {spectrograms_processed} spectrograms')
     
     # TODO: make this message more meaningful 
     return True, f"Processed {spectrograms_processed} spectrograms"

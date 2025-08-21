@@ -1,5 +1,5 @@
-###FKW_detector
-##Code written for underwater SeaGliders. 
+### FKW_detector
+## Code written for underwater SeaGliders. 
 
 This repository allows the glider to analyze a subset
 of audio data from the previous ascent / descent. 

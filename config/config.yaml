@@ -12,6 +12,6 @@ base_audio_directory: "2024_descent"  #2024_descent/240930/WISPR_000000_000000.d
 
 # Analyst Parameters
 # How many audio files should be processed?
-num_files_to_analyze: 30
+num_files_to_analyze: 4
 
 

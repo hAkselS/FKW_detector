@@ -22,7 +22,7 @@ import sys_control.select_audio as select_audio
 
 ###################################################################
 # CONFIGURATION DEFAULTS
-config_file = project_root + '/config.yaml'
+config_file = project_root + '/config/config.yaml'
 ###################################################################
 
 # print(f'Config file = {config_file}')

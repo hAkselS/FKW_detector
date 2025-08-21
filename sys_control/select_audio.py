@@ -25,17 +25,20 @@ ID:     sa
 '''
 import yaml 
 import os 
+import sys 
 import pandas as pd
 import json
 from datetime import datetime
 from collections import OrderedDict
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(project_root)
 
 
 ###################################################################
 # CONFIGURATION DEFAULTS
-config_file = 'config.yaml'  # Path to your configuration file
-csv_directory = 'logs/dive_logs'  # Directory where CSV files will be saved
-time_mapping_file = 'logs/analyst_logs/observed_audio_and_times.json'  # Path to the file mapping JSON
+config_file = project_root + '/config/config.yaml'  # Path to your configuration file
+csv_directory = project_root + '/logs/dive_logs'  # Directory where CSV files will be saved
+time_mapping_file = project_root + '/logs/analyst_logs/observed_audio_and_times.json'  # Path to the file mapping JSON
 directory_date_format = "%y%m%d" # How date directories are named
 
 ###################################################################
@@ -376,7 +379,7 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
         df['selected_for_sampling'] = True
         # Save the file 
         df.to_csv(csv_path, index=False)
-        print(f"\n✓ Selected files {num_files} for sampling (num files < num files to analyze)")
+        print(f"\nsa: ✓ Selected files {num_files} for sampling (num files < num files to analyze)")
         return True, f"Selected all {num_files} files for sampling", {num_files}    
 
     else: 
@@ -395,7 +398,7 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
                 files_analyzed += 1 
 
         df.to_csv(csv_path, index=False)
-        print(f"\n✓ Selected files for sampling (num files > num files to analyze)")
+        print(f"\nsa: ✓ Selected files for sampling (num files > num files to analyze)")
         return True, f"Selected files for sampling", df['selected_for_sampling'].sum()
 
 def main():
@@ -417,7 +420,7 @@ def main():
         return False, "Failed to load configuration.", ''
 
     # Continue with the main logic using the loaded config
-    print("Configuration loaded successfully.")
+    print("sa: Configuration loaded successfully.")
 
     base_audio_directory = config['base_audio_directory']
     num_files_to_analyze = config['num_files_to_analyze']

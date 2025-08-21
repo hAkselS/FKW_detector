@@ -1,17 +1,3 @@
-# User configurations for FKW_detector
-# Mess with these parameters to change operation variables
-
-
-# Forced shutdown: if this flag is True that means the the pi shutdown unintentionally.
-# This could be that the Pi froze or a similar critical error.
-# This flag should be set by the user to 'False' before deployment, the rest is handle by the system. 
-forced_shutdown: False
-
-# Where should the detector look for .dat audio files?
-base_audio_directory: "2024_descent"  #2024_descent/240930/WISPR_000000_000000.dat
-
-# Analyst Parameters
-# How many audio files should be processed?
+base_audio_directory: 2024_descent
+forced_shutdown: false
 num_files_to_analyze: 4
-
-

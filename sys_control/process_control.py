@@ -17,7 +17,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 import sys_control.transform_and_inference as transform_and_inference
 import sys_control.select_audio as select_audio
-
+import sys_control.shutdown_pi as shutdown_pi
 
 
 ###################################################################
@@ -27,24 +27,25 @@ config_file = project_root + '/config/config.yaml'
 
 # print(f'Config file = {config_file}')
 
-# TODO: WRITING TO YAML ERASES ALL ITS COMMENTS
-# # Open the config file 
-# try:
-#     with open(config_file, 'r') as file:
-#         config = yaml.safe_load(file)
-# except Exception as e:
-#     print(f"✗ CRITICAL ERROR: Unexpected error loading config: {e}")
-#     # TODO: trigger shutdown exit
+# Open the config file 
+try:
+    with open(config_file, 'r') as file:
+        config = yaml.safe_load(file)
+except Exception as e:
+    print(f"pc: ✗ CRITICAL ERROR: Unexpected error loading config: {e}")
+    shutdown_pi.shutdown('Config file not opened')
+    sys.exit(1)
 
-# # Check forced shutdown status: True = bad (system failed) False = good (system operated nominally)
-# if config['forced_shutdown'] == True:
-#     print("✗ CRITICAL ERROR: System failed")
-#     # TODO: trigger shutdown exit
+# Check forced shutdown status: True = bad (system failed) False = good (system operated nominally)
+if config['forced_shutdown'] == True:
+    print("pc: ✗ CRITICAL ERROR: Forced shutdown flag was upon startup set to True")
+    shutdown_pi.shutdown('Forced shutdown flag was found as True')
+    sys.exit(1)
 
-# # Set the forced shutdown flag true
-# config['forced_shutdown'] = True
-# with open(config_file, 'w') as file:
-#     yaml.dump(config, file, default_flow_style=False)
+# Set the forced shutdown flag true
+config['forced_shutdown'] = True
+with open(config_file, 'w') as file:
+    yaml.dump(config, file, default_flow_style=False)
 # TODO: Create a timer the shuts down the pi after X minutes 
 
 # Call select audio 
@@ -57,7 +58,9 @@ if select_status:
     print(f"pc: Transform and Inference Status: {trans_status}, Message: {trans_message}")
 
 
-# Set the forced shutdown flag false
-# config['forced_shutdown'] = True
-# with open(config_file, 'w') as file:
-#     yaml.dump(config, file, default_flow_style=False)
+# Set the forced shutdown flag back to False
+config['forced_shutdown'] = False
+with open(config_file, 'w') as file:
+    yaml.dump(config, file, default_flow_style=False)
+    shutdown_pi.shutdown('Mission completed successfully')
+    sys.exit(0)

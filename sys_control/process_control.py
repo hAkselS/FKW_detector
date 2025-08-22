@@ -82,7 +82,7 @@ with open(config_file, 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
     life_timer.stop_timer_event.set() # Stop the life timer
     if life_timer.stop_timer_event.is_set():
-        print("pc: Timer cancelled early.")
+        print("pc: Timer cancelled by process_control.py")
 
 
     shutdown_pi.shutdown('Mission completed successfully')

@@ -1,4 +1,4 @@
 allowed_runtime_minutes: 1
 base_audio_directory: 2024_descent
 forced_shutdown: false
-num_files_to_analyze: 4
+num_files_to_analyze: 60

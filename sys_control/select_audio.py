@@ -242,6 +242,9 @@ def load_file_mapping(time_mapping_file):
 def save_file_mapping(file_time_map, time_mapping_file):
     """Save file-to-time mapping to JSON."""
     try:
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(time_mapping_file), exist_ok=True)
+        
         # Convert datetime objects to ISO format strings for JSON
         data = OrderedDict()
         for timestamp, file_path in file_time_map.items():
@@ -420,14 +423,14 @@ def main():
         return False, "Failed to load configuration.", ''
 
     # Continue with the main logic using the loaded config
-    print("sa: Configuration loaded successfully.")
+    print("\nsa: Configuration loaded successfully.")
 
     base_audio_directory = config['base_audio_directory']
     num_files_to_analyze = config['num_files_to_analyze']
 
     # DEBUG 
     print(f"\nsa: Base audio directory: {base_audio_directory}")
-    print(f"sa: Number of files to analyze: {num_files_to_analyze}\n")
+    print(f"sa: Maximum number of files to analyze: {num_files_to_analyze}\n")
 
     # Update mapping with any new files (fast for incremental updates)
     csv_path = update_file_mapping(base_audio_directory, time_mapping_file)

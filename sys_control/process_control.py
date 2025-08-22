@@ -43,9 +43,18 @@ if config['forced_shutdown'] == True:
     shutdown_pi.shutdown('Forced shutdown flag was found as True')
     sys.exit(1)
 
-# Start the life timer
-# TODO: GET AND VET THE COUNT DOWN TIME HERE IN PROCESS CONTROL, PASS THE TIME AND START THE TIMING
-# life_timer.run_life_timer()
+# Grab the allowed runtime minutes for the life timer
+try:    
+    allowed_runtime_minutes = config['allowed_runtime_minutes']
+    if not (1 <= allowed_runtime_minutes <= 120):
+        print(f"pc: ✗ CRITICAL ERROR: Invalid allowed_runtime_minutes value: {allowed_runtime_minutes}. Must be between 1 and 120.")
+        shutdown_pi.shutdown('Invalid allowed_runtime_minutes value')
+        sys.exit(1)
+
+except Exception as e:
+    print(f"pc: ✗ CRITICAL ERROR: Unexpected error reading allowed_runtime_minutes: {e}")
+    shutdown_pi.shutdown('Error reading allowed_runtime_minutes')
+    sys.exit(1)
 
 
 # Set the forced shutdown flag true
@@ -53,6 +62,9 @@ config['forced_shutdown'] = True
 with open(config_file, 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
 # TODO: Create a timer the shuts down the pi after X minutes 
+
+# Start the life timer
+life_timer.run_life_timer(allowed_runtime_minutes)
 
 # Call select audio 
 select_status, select_message, path_to_dive_csv = select_audio.main()
@@ -69,5 +81,9 @@ config['forced_shutdown'] = False
 with open(config_file, 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
     life_timer.stop_timer_event.set() # Stop the life timer
+    if life_timer.stop_timer_event.is_set():
+        print("pc: Timer cancelled early.")
+
+
     shutdown_pi.shutdown('Mission completed successfully')
     sys.exit(0)

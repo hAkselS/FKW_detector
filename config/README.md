@@ -17,3 +17,7 @@ How many audio files should be processed?
 Our initial guess is approximately 60 files. 
 In lab, 60 files equates to 1Wh of energy consumption on the RPi5. 
 
+### Allowed Runtime Minutes (allowed_runtime_minutes: 15)
+How long should the Raspberry be allowed to run before 
+shutting down. Note, the timer running out will NOT cause the 
+forced shutdown flag to be True. 

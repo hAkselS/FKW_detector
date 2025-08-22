@@ -18,6 +18,7 @@ sys.path.append(project_root)
 import sys_control.transform_and_inference as transform_and_inference
 import sys_control.select_audio as select_audio
 import sys_control.shutdown_pi as shutdown_pi
+import sys_control.life_timer as life_timer
 
 
 ###################################################################
@@ -47,6 +48,9 @@ config['forced_shutdown'] = True
 with open(config_file, 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
 # TODO: Create a timer the shuts down the pi after X minutes 
+
+# Start the life timer
+# life_timer.start_timer()
 
 # Call select audio 
 select_status, select_message, path_to_dive_csv = select_audio.main()

@@ -43,14 +43,16 @@ if config['forced_shutdown'] == True:
     shutdown_pi.shutdown('Forced shutdown flag was found as True')
     sys.exit(1)
 
+# Start the life timer
+# TODO: GET AND VET THE COUNT DOWN TIME HERE IN PROCESS CONTROL, PASS THE TIME AND START THE TIMING
+# life_timer.run_life_timer()
+
+
 # Set the forced shutdown flag true
 config['forced_shutdown'] = True
 with open(config_file, 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
 # TODO: Create a timer the shuts down the pi after X minutes 
-
-# Start the life timer
-# life_timer.start_timer()
 
 # Call select audio 
 select_status, select_message, path_to_dive_csv = select_audio.main()
@@ -66,5 +68,6 @@ if select_status:
 config['forced_shutdown'] = False
 with open(config_file, 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
+    life_timer.stop_timer_event.set() # Stop the life timer
     shutdown_pi.shutdown('Mission completed successfully')
     sys.exit(0)

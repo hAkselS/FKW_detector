@@ -2,6 +2,12 @@
 File:   sys_control/process_control.py
 
 Spec:   Handle all processes and their orderings. 
+        Get configs from config.yaml and check for forced shutdown. 
+        Create start the emergency shutdown timer.
+        Run select audio, then run transform and inference
+        on the files selected for sampling. 
+        Reset forced shutdown flag, stop forced shutdown timer,
+        shutdown the system gracefully.
 
 Usage:  python3 sys_control/process_control.py 
 

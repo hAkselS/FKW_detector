@@ -27,7 +27,7 @@ config_file = project_root + '/config/config.yaml'
 stop_timer_event = threading.Event()
 
 def start_timer(allowed_runtime_minutes):
-    print(f"lt: Starting life timer for {allowed_runtime_minutes} minutes...")
+    print(f"\nlt: Starting life timer for {allowed_runtime_minutes} minutes...")
     allowed_runtime_seconds = allowed_runtime_minutes * 60
 
     for remaining in range(allowed_runtime_seconds, 0, -1):

@@ -253,7 +253,7 @@ def save_file_mapping(file_time_map, time_mapping_file):
         with open(time_mapping_file, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print(f"\nsa: Saved {len(file_time_map)} files to mapping")
+        print(f"\nsa: [{len(file_time_map)}] total files saved in logs/analyst_logs json")
         return True
     except Exception as e:
         print(f"sa: Error saving mapping: {e}")
@@ -365,8 +365,8 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     # Save updated mapping
     save_file_mapping(existing_mapping, time_mapping_file)
 
-    print(f"sa: Added {new_files_found} new files to mapping")
-    return csv_path  
+    print(f"sa: Added [{new_files_found}] new files to logs/analyst_logs json")
+    return csv_path
 
 def select_files_for_sampling(csv_path, num_files_to_analyze):
 
@@ -382,7 +382,7 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
         df['selected_for_sampling'] = True
         # Save the file 
         df.to_csv(csv_path, index=False)
-        print(f"\nsa: ✓ Selected files {num_files} for sampling (num files < num files to analyze)")
+        print(f"\nsa: ✓ Selected files [{num_files}] for sampling (num files < num files to analyze)")
         return True, f"Selected all {num_files} files for sampling", {num_files}    
 
     else: 
@@ -423,7 +423,8 @@ def main():
         return False, "Failed to load configuration.", ''
 
     # Continue with the main logic using the loaded config
-    print("\nsa: Configuration loaded successfully.")
+    # DEBUG 
+    # print("\nsa: Configuration loaded successfully.")
 
     base_audio_directory = config['base_audio_directory']
     num_files_to_analyze = config['num_files_to_analyze']

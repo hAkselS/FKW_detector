@@ -1,4 +1,6 @@
 allowed_runtime_minutes: 1
 base_audio_directory: 2024_descent
+confidence_threshold: 0.5
 forced_shutdown: false
+model_path: models/fkw_whistle_classifier_2.0.pt
 num_files_to_analyze: 60

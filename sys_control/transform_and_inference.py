@@ -32,7 +32,7 @@ inference_output_dir = project_root + '/data_products/inference_outputs'
 ###################################################################
 
 
-def process_audio_and_inference(input_csv): # Input CSV with file path
+def process_audio_and_inference(input_csv, model_path, confidence_threshold): # Input CSV with file path
     # Get the CSV file name for later use
     csv_filename = os.path.splitext(os.path.basename(input_csv))[0]
 
@@ -56,7 +56,7 @@ def process_audio_and_inference(input_csv): # Input CSV with file path
                 # Log that wave to spectrogram is complete
                 df.loc[df["file_name"] == file_name, "wave_to_spectro"] = True
 
-                inference_status, inference_message = inference.perform_inference(spectro_files_list, inference_output_dir+ f'/{csv_filename}_detections.csv')
+                inference_status, inference_message = inference.perform_inference(spectro_files_list, model_path, confidence_threshold, inference_output_dir+ f'/{csv_filename}_detections.csv')
 
                 if inference_status:
                     # Log that inference is complete

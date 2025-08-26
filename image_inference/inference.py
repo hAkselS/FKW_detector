@@ -19,16 +19,13 @@ from datetime import datetime
 
 ###################################################################
 # CONFIGURATION DEFAULTS
-model_path = "models/fkw_whistle_classifier_2.0.pt"   # Update with your trained model path
-# model_path = 'models/yolo11n.pt' # For debugging 
-confidence_threshold = 0.25                           # Minimum confidence for detections
-
+default_confidence_threshold = 0.25                           # Minimum confidence for detections
 # Project root 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ###################################################################
 
-def perform_inference(input_files, output_file_name_and_path):
+def perform_inference(input_files, model_path, confidence_threshold, output_file_name_and_path):
     """
     Perform YOLO inference on a list of image files.
     

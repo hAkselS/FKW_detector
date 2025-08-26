@@ -62,6 +62,22 @@ def main():
         shutdown_pi.shutdown('Error reading allowed_runtime_minutes')
         sys.exit(1)
 
+    # Grab the model path and confidence threshold
+    try:
+        model_path = config['model_path']
+        if not os.path.exists(model_path):
+            print(f"pc: ✗ CRITICAL ERROR: Model file not found: {model_path}")
+            shutdown_pi.shutdown('Model file not found')
+            sys.exit(1)
+        confidence_threshold = config['confidence_threshold']
+        if not (0.0 <= confidence_threshold <= 1.0):
+            print(f"pc: ✗ CRITICAL ERROR: Invalid confidence_threshold value: {confidence_threshold}. Must be between 0.0 and 1.0.")
+            shutdown_pi.shutdown('Invalid confidence_threshold value')
+            sys.exit(1)
+    except Exception as e:
+        print(f"pc: ✗ CRITICAL ERROR: Unexpected error reading model_path or confidence_threshold: {e}")
+        shutdown_pi.shutdown('Error reading model_path or confidence_threshold')
+        sys.exit(1)
 
     # Set the forced shutdown flag true
     config['forced_shutdown'] = True
@@ -78,7 +94,7 @@ def main():
 
     # Call transform and inference with output from select audio
     if select_status:
-        trans_status, trans_message = transform_and_inference.process_audio_and_inference(path_to_dive_csv)
+        trans_status, trans_message = transform_and_inference.process_audio_and_inference(path_to_dive_csv, model_path, confidence_threshold)
         print(f"\npc: Transform and Inference Status: {trans_status}, Message: {trans_message}")
 
 

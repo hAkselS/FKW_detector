@@ -23,6 +23,7 @@ sys.path.append(project_root)
 import audio_transform.audio_to_spectro as audio_to_spectro
 import audio_transform.dat_to_wav as dat_to_wav
 import image_inference.inference as inference
+import image_inference.packetize_results as packetize_results
 
 ###################################################################
 # CONFIGURATION DEFAULTS
@@ -63,9 +64,18 @@ def process_audio_and_inference(input_csv, model_path, confidence_threshold): # 
                     df.loc[df["file_name"] == file_name, "image_analyzed"] = True
                     spectrograms_processed += 2 # Two spectrograms processed every time the inference status returns True
 
+
         df.to_csv(input_csv, index=False)  # Write updated CSV to memory
         print(f'ti: processed {file_name}')
+
     print(f'ti: analyzed {spectrograms_processed} spectrograms')
+    # Packetize results
+    packetize_status, packetize_message, packetize_output = packetize_results.packetize_inference_outputs(inference_output_dir+ f'/{csv_filename}_detections.csv')
+
+    # if packetize_status:
+    #     # Log that packetization is complete
+    #     df.loc[df["file_name"] == file_name, "results_packetized"] = True
+    print(f'sa: {packetize_message}')
     
     # TODO: make this message more meaningful 
     return True, f"Processed {spectrograms_processed} spectrograms"

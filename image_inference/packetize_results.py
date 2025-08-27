@@ -14,6 +14,7 @@ import pandas as pd
 import os 
 
 # TODO: Fix logic so that only positive detections are packetized
+# RUN THIS SCRIPT BY ITSELF FOR THE TIME BEING
 
 # def filter_by_bbox_area(input_csv, area_threshold):
 #     """
@@ -56,17 +57,16 @@ def packetize_inference_outputs(input_csv):
         # Read the existing CSV file
         df = pd.read_csv(input_csv)
 
-        # If your CSV has a 'start_time' column, group by it
-        if 'start_time' in df.columns:
-            packetized_df = df.groupby('start_time').size().reset_index(name='detection_count')
-        else:
-            raise ValueError("CSV must have a 'start_time' column to packetize by time.")
+        for row in df.itertuples():
+            file_path = row.file_path
+            total_detections = row.number_of_detections
+            start_time = row.start_time
+            print(f"total detections {total_detections}")
 
-        # Count total positive detections
-        total_detections = packetized_df['detection_count'].sum()
+
 
         # Save the packetized results
-        packetized_df.to_csv(output_csv, index=False)
+       # packetized_df.to_csv(output_csv, index=False)
         message = f"Packetized {total_detections} positive detections to {output_csv}"
         # print(message)
         return True, message, output_csv
@@ -75,3 +75,12 @@ def packetize_inference_outputs(input_csv):
         message = f"Failed to packetize results: {str(e)}"
         print(message)
         return False, message, ""
+    
+
+def main():
+    input_csv = 'data_products/inference_outputs/240930_000003-241001_000449_detections.csv'
+    packetize_inference_outputs(input_csv)
+
+if __name__ == "__main__":
+    main()
+    

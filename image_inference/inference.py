@@ -13,28 +13,27 @@ from ultralytics import YOLO
 import os
 import sys
 import pandas as pd 
+from datetime import datetime
 
 
 
 ###################################################################
 # CONFIGURATION DEFAULTS
-model_path = "models/fkw_whistle_classifier_2.0.pt"   # Update with your trained model path
-# model_path = 'models/yolo11n.pt' # For debugging 
-confidence_threshold = 0.25                           # Minimum confidence for detections
-
+default_confidence_threshold = 0.25                           # Minimum confidence for detections
 # Project root 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ###################################################################
 
-def perform_inference(input_files, output_directory=project_root + '/logs/inference_logs'):
+def perform_inference(input_files, model_path, confidence_threshold, output_file_name_and_path):
     """
     Perform YOLO inference on a list of image files.
     
     Args:
         input_files (list): List of paths to image files
         model_path (str): Path to the YOLO model file
-        confidence (float): Confidence threshold for detections
+        results_file_name_and_path (str): Path to the results CSV file
+        TODO: confidence (float): Confidence threshold for detections
     
     Returns:
         tuple: (success, message, output directory)
@@ -71,7 +70,7 @@ def perform_inference(input_files, output_directory=project_root + '/logs/infere
                 }
                 
                 # Process detections
-                for result in results: # TODO: use existing FKW tools as a template for this (just return number of positive detections and confidence level.)
+                for result in results: 
                     boxes = result.boxes
                     if boxes is not None:
                         for box in boxes:
@@ -87,8 +86,7 @@ def perform_inference(input_files, output_directory=project_root + '/logs/infere
                 total_detections += file_results['detection_count']
 
                 # Save results to CSV
-                # TODO: Save this to a meaningful location and with a meaningful file name!!!!!
-                success, message = save_results(file_results, f'logs/inference_logs/bobby.csv') #csv_file_path)
+                success, message = save_results(file_results, output_file_name_and_path) #csv_file_path)
                 if not success:
                     print(f"Warning: {message}")
 
@@ -120,6 +118,16 @@ def save_results(results_dict, csv_file_path):
         file_path = results_dict.get('file_path', 'Unknown')
         total_detections = results_dict.get('detection_count', 0)
         detections = results_dict.get('detections', [])
+
+        # Find the start time 
+        file_name = os.path.basename(file_path)   # WISPR_240930_000003-0001.jpg
+        parts = file_name[6:-9]
+        if '_' in parts:
+            date_part, time_part = parts.split('_')
+            datetime_str = date_part + time_part
+            file_datetime = datetime.strptime(datetime_str, "%y%m%d%H%M%S")
+        start_time = file_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
         
         # Prepare data for DataFrame
         data = []
@@ -132,6 +140,7 @@ def save_results(results_dict, csv_file_path):
                 
                 data.append({
                     'file_path': file_path,
+                    'start_time': start_time,
                     'class_name': detection.get('class_name', 'Unknown'),
                     'class_id': detection.get('class_id', -1),
                     'confidence': round(detection.get('confidence', 0.0), 4),
@@ -142,6 +151,7 @@ def save_results(results_dict, csv_file_path):
             # No detections found - create one row with zeros
             data.append({
                 'file_path': file_path,
+                'start_time': start_time,
                 'class_name': 'None',
                 'class_id': -1,
                 'confidence': 0.0,

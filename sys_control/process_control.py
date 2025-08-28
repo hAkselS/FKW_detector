@@ -65,15 +65,19 @@ def main():
     # Grab the model path and confidence threshold
     try:
         model_path = config['model_path']
+
         if not os.path.exists(model_path):
             print(f"pc: ✗ CRITICAL ERROR: Model file not found: {model_path}")
             shutdown_pi.shutdown('Model file not found')
             sys.exit(1)
+
         confidence_threshold = config['confidence_threshold']
+
         if not (0.0 <= confidence_threshold <= 1.0):
             print(f"pc: ✗ CRITICAL ERROR: Invalid confidence_threshold value: {confidence_threshold}. Must be between 0.0 and 1.0.")
             shutdown_pi.shutdown('Invalid confidence_threshold value')
             sys.exit(1)
+
     except Exception as e:
         print(f"pc: ✗ CRITICAL ERROR: Unexpected error reading model_path or confidence_threshold: {e}")
         shutdown_pi.shutdown('Error reading model_path or confidence_threshold')
@@ -83,7 +87,6 @@ def main():
     config['forced_shutdown'] = True
     with open(config_file, 'w') as file:
         yaml.dump(config, file, default_flow_style=False)
-    # TODO: Create a timer the shuts down the pi after X minutes 
 
     # Start the life timer
     life_timer.run_life_timer(allowed_runtime_minutes)

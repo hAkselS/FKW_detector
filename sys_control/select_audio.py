@@ -33,14 +33,12 @@ from collections import OrderedDict
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
-
 ###################################################################
 # CONFIGURATION DEFAULTS
 config_file = project_root + '/config/config.yaml'  # Path to your configuration file
 csv_directory = project_root + '/logs/dive_logs'  # Directory where CSV files will be saved
 time_mapping_file = project_root + '/logs/analyst_logs/observed_audio_and_times.json'  # Path to the file mapping JSON
 directory_date_format = "%y%m%d" # How date directories are named
-
 ###################################################################
 
 def load_config(config_file):
@@ -284,7 +282,7 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     new_files_found = 0
 
     for root, dirs, files in os.walk(directory):
-        # DEBUg 
+        # DEBUG
         # print(f"Scanning: {root}")
         # print(f"Files: {files}")
         for filename in files:
@@ -342,7 +340,7 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
             populate_success, population_message = populate_dive_csv(csv_directory, csv_name, sorted_new_files)
 
             if populate_success:
-                print(f"\n✓ Successfully populated CSV with new files: {csv_name}")
+                print(f"\nsa:✓ Successfully populated CSV with new files: {csv_name}")
             else:
                 print(f"sa: ✗ Failed to populate CSV: {population_message}")
 
@@ -374,7 +372,7 @@ def select_files_for_sampling(csv_path, num_files_to_analyze):
     num_files = len(df) 
 
     if num_files == 0:
-        print(f"\n✗ No files found for sampling")
+        print(f"\nsa: ✗ No files found for sampling")
         return False, "No files found for sampling", 0
 
     if num_files <= num_files_to_analyze:

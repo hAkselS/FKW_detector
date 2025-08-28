@@ -54,8 +54,6 @@ def start_timer(allowed_runtime_minutes):
     shutdown_pi.shutdown('Allowed runtime exceeded')
     sys.exit(0)
 
-
-
 def run_life_timer(allowed_runtime_minutes):
     # Run the timer in a separate thread
     timer_thread = threading.Thread(target=start_timer, args=(allowed_runtime_minutes,), daemon=True)

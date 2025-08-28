@@ -1,11 +1,11 @@
 '''
 File:   system_control/transform_and_inference.py
 
-Spec:   Repeatedly transfrom then infer on selected wave files. 
+Spec:   Repeatedly transfrom and inference selected wave files. 
         This script uses a CSV to know which files to process.
-        Upon processing each file, it will update the CSV with a 
-        true / false flag for turning the file into a spectrogram
-        and for inferencing the spectrogram.
+        Upon processing each file, it will update the CSV's 
+        true / false flag for each step (dat_to_wave, wave_to_spectro, image_analyzed)
+        of the process. 
 
 Usage:  python3 system_control/transform_and_inference.py 
 
@@ -64,7 +64,7 @@ def process_audio_and_inference(input_csv, model_path, confidence_threshold): # 
                     df.loc[df["file_name"] == file_name, "image_analyzed"] = True
                     spectrograms_processed += 2 # Two spectrograms processed every time the inference status returns True
                     
-                    # Packetize results (TESTING)
+                    # Packetize results
                     packetize_status, packetize_message, packetize_output = packetize_results.packetize_inference_outputs(inference_output_dir+ f'/{csv_filename}_detections.csv')
 
 
@@ -80,12 +80,8 @@ def process_audio_and_inference(input_csv, model_path, confidence_threshold): # 
 
 def main():
     
-    print('ti: this program should not be run directly')
-    
-    # TODO: Remove block, this is only used for testing 
-    input_csv = '/Users/akselsloan/FKW_detector/logs/dive_logs/240930_000003-241001_000449.csv'
-    # Process the files in the CSV given to us by Select Audio
-    process_audio_and_inference(input_csv)
+    print(f"ti: PLEASE DO NOT RUN THIS SCRIPT BY ITSELF, RUN <python3 sys_control/process_control.py> INSTEAD, EXITING...")
+    sys.exit(1)
 
 
 if __name__ == "__main__":

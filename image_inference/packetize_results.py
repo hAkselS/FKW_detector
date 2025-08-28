@@ -8,45 +8,18 @@ Spec:   Parse existing inference outputs and remove all information
 ID:     pr 
 
 Usage:  Call this from another script!
+
+Next Step: Implement a function that filters detections by their bounding box size. 
 '''
 
 import pandas as pd 
 import os 
 from datetime import datetime, timedelta
 
-# TODO: Fix logic so that only positive detections are packetized
-# RUN THIS SCRIPT BY ITSELF FOR THE TIME BEING
-
-# def filter_by_bbox_area(input_csv, area_threshold):
-#     """
-#     Exclude detections with bounding box area below the threshold.
-#     Returns a filtered DataFrame.
-#     """
-#     import pandas as pd
-
-#     df = pd.read_csv(input_csv)
-#     if 'bounding_box' not in df.columns:
-#         raise ValueError("CSV must have a 'bounding_box' column.")
-
-#     def bbox_area(bbox_str):
-#         try:
-#             coords = [float(x) for x in bbox_str.split(',')]
-#             if len(coords) == 4:
-#                 x1, y1, x2, y2 = coords
-#                 return abs((x2 - x1) * (y2 - y1))
-#         except Exception:
-#             return 0.0
-#         return 0.0
-
-#     df['bbox_area'] = df['bounding_box'].apply(bbox_area)
-#     filtered_df = df[df['bbox_area'] >= area_threshold].copy()
-#     filtered_df.drop(columns=['bbox_area'], inplace=True)
-#     return filtered_df
-
 def packetize_inference_outputs(input_csv):
     # Find the name of the existing file 
     base_name = os.path.basename(input_csv)
-    # Remove 'detection' from the base name
+    # Remove 'detection' from the base name, add 'packetized'
     new_name = base_name.replace('detection', 'packetized')
     
     # Create the output directory inside data_products/packets
@@ -98,6 +71,7 @@ def packetize_inference_outputs(input_csv):
 
 def main():
     # For testing purposes only
+    print(f"PLEASE DO NOT RUN THIS SCRIPT BY ITSELF, RUN <python3 sys_control/process_control.py> INSTEAD")
     input_csv = 'data_products/inference_outputs/240930_000003-241001_000449_detections.csv'
     packetize_inference_outputs(input_csv)
 

@@ -54,7 +54,6 @@ def perform_inference(input_files, model_path, confidence_threshold, output_file
         except Exception as e:
             return False, f"Failed to load model: {str(e)}"
         
-        
         total_detections = 0
         
         for file_path in input_files:
@@ -120,6 +119,7 @@ def save_results(results_dict, csv_file_path):
         detections = results_dict.get('detections', [])
 
         # Find the start time 
+        # TODO: Consider adding +30 seconds here instead of in the packetizer. 
         file_name = os.path.basename(file_path)   # WISPR_240930_000003-0001.jpg
         parts = file_name[6:-9]
         if '_' in parts:

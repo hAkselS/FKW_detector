@@ -1,6 +1,5 @@
 # FKW_detector
 ## Code written for underwater SeaGliders. 
-
 This repository allows the glider to analyze a subset
 of audio data from the previous ascent / descent. 
 Code in this repository is designed to run on a 
@@ -12,25 +11,36 @@ are analyzed using a YOLO11 nano model.
 
 ## Audio Transform
 The audio tranform directory holds code used
-to transorm audio into spectrograms. 
+to transorm audio into spectrograms. Audio comes in
+in the .dat file format, is translated to .wav format,
+then transformed into spectrograms.
 
-## Prediction Interface
-The prediction interface directory hold code that handles selection of
-audio and images for analysis. Detection also holds 
-the script used to analyze spectrograms with AI. 
+## Image Inference
+The image inference directory holds code that handles
+running inference on spectrograms and packetizing 
+inference outputs into radio transmittable products. 
 
 ## Models
-Transfer learning trained models live here. 
+AI models designed to detect False Killer Whales live here. 
+This repository expects ultralytics YOLO type models,
+preferably yolo8 and yolo11.  
 
 ## Sys Control
-The system control directory holds code that allows the 
-detector to start up and ensures that all scripts run in
-the right order without any errors.  
+The system control directory holds code that starts the detector,
+selects the audio files for analysis, calls the translation and 
+transformation scripts, and handles life cycle. This code 
+operates the system. 
 
-## Logs 
+## Data Products (not shown)
+This directory holds all of the data products created by
+the FKW_detector. Data products include wav files, spectrograms,
+inference information, and packetized results (also inference information). 
+
+## Logs (not shown)
 Logs directory holds important information on what files 
-have been previously analyzed as well as how the system is
-running and any error reporting. 
+have been seen, what files need to be analyzed, and 
+the status of the files that have been analyzed. 
+This directory appears when you run process_control.py.
 
 ## Venv (not shown)
 Make sure to run code in a python3.11 virtual environment! 

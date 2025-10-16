@@ -227,7 +227,7 @@ def load_file_mapping(time_mapping_file):
             timestamp = datetime.fromisoformat(timestamp_str)
             file_time_map[timestamp] = file_path
         
-        print(f"sa: Loaded {len(file_time_map)} files from existing mapping")
+        print(f"sa: Loaded {len(file_time_map)} files from existing mapping in logs/analyst_logs json file")
         return file_time_map
         
     except FileNotFoundError:

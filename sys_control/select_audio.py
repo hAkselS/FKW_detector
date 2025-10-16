@@ -227,7 +227,7 @@ def load_file_mapping(time_mapping_file):
             timestamp = datetime.fromisoformat(timestamp_str)
             file_time_map[timestamp] = file_path
         
-        print(f"sa: Loaded {len(file_time_map)} files from existing mapping in logs/analyst_logs json file")
+        print(f"sa: Loaded {len(file_time_map)} files from analyst logs in {time_mapping_file}")
         return file_time_map
         
     except FileNotFoundError:
@@ -251,7 +251,7 @@ def save_file_mapping(file_time_map, time_mapping_file):
         with open(time_mapping_file, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print(f"\nsa: [{len(file_time_map)}] total files saved in logs/analyst_logs json")
+        print(f"\nsa: [{len(file_time_map)}] total files logged to {time_mapping_file}")
         return True
     except Exception as e:
         print(f"sa: Error saving mapping: {e}")

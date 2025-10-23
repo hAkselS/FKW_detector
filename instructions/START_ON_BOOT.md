@@ -2,6 +2,7 @@
 ## How to get the code to run automatically when the Raspberry Pi boots up. 
 
 *skip to 'steps' to avoid learning anything.*
+THIS SHOULD ONLY BE DONE A RASPBERRY PI, not on a personal or goverment computer. 
 
 ### Intro to Systemd
 Unfortunately, ensuring that a program runs immediately after boot time is a non-trivial task. Hence, we use systemd to accomplish the task. Systemd is a power operating system level tool, and so the following instructions should be followed carefully. 
@@ -11,4 +12,13 @@ We are created a systemd / systemclt service that becomes part of the operating 
 
 ## Steps
 
-# 1. 
+# 1. Copy save-whales.service into the operating system
+
+Use the 'cp' (copy) command to move save-whales.service into the user space of the systemd directory. In English, put save_whales.service in /etc/systemd/user
+
+*Run from project root*
+
+```bash
+sudo cp sys_control/save-whales.service /etc/systemd/user/
+```
+TODO: this need testing!!!

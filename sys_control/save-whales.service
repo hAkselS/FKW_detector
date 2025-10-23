@@ -1,0 +1,10 @@
+[Unit]
+Description=This custom service starts the FKW_detector at boot time.
+
+[Service]
+ExecStart=/home/camera/FKW_detector/sys_control/run_detector.sh
+WorkingDirectory=/home/camera/FKW_detector
+Restart=no
+
+[Install]
+WantedBy=default.target

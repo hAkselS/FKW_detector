@@ -2,25 +2,28 @@
 ## How to get this repository working once downloaded.
 
 ### Desktop implementation
-Before you can run any code, you need to have a working conda environment. 
+Do this on your des
 
 #### First time conda setup
+Before you can run any code, you need to have a working virtual environment. I elected to use conda to manage my virtual environment because it allows me to select a specific version of python.
+
 Setting up a conda environment is generally straight forward and documentation can be found here: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
  
 You will need to run approximately these commands in this order. 
 
 *From the project root AKA .../FKW_detector/*
-
 <conda create --name venv python=3.11>
 This will create a brand new conda environment called "venv". A new folder called venv should appear in the project root directory. 
 
 <source venv/bin/activate>
 This will activate the conda environement. You should see (venv) in front of your command line prompt. 
+(You can also use <conda activate venv> for this)
 
 <pip install -r requirements.txt>
 This will install all the required libraries to run FKW_detector. 
 
 #### Activating conda once it has been setup
+/start here if you already have conda/ 
 *From the project root*
 <source venv/bin/activate>
 This will activate the conda environement. You should see (venv) in front of your command line prompt. 

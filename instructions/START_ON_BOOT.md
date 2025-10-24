@@ -59,4 +59,6 @@ See if it worked by looking at the status logs
 systemctl --user status save-whales.service
 ```
 
-If it worked, you'll see...
+If it worked, you'll see 'Process: ...other stuff... (code=exited, status=0/SUCCESS)'
+
+You may also see 'Main PID': #### (run_detector)', this means it's still running and you should wait a bit and check again. 

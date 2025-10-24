@@ -23,7 +23,7 @@ sudo cp sys_control/save-whales.service /etc/systemd/user/
 ```
 TODO: this need testing!!!
 
-# 2. Reload the Daemon, enable save-whales
+# 2. Reload the daemon, enable save-whales
 remove parens if not necessary(
 Move to systemd user directory
 
@@ -44,7 +44,7 @@ Enable the new save-whales serive
 systemctl --user enable save-whales.service
 ```
 
-# 3. Test (optional, but not really optional)
+# 3. First test 
 Theoretically, in step two you added a new service to systemd's user boot time 'to-do' list. Because this is mission critical, let's make sure it works. 
 
 Try running the FKW_detector by manually starting the service which activates the detector. 
@@ -62,3 +62,24 @@ systemctl --user status save-whales.service
 If it worked, you'll see 'Process: ...other stuff... (code=exited, status=0/SUCCESS)'
 
 You may also see 'Main PID': #### (run_detector)', this means it's still running and you should wait a bit and check again. 
+
+# 4. Second test
+
+Power off the Raspberry Pi, wait ten seconds, power on the Raspberry Pi, and determine if the detector is running. 
+
+## Determine if the detector is running: 
+
+#### Method 1: Check the FKW_detector logs.
+In analyst logs, there should be a list of every file (and associated time) that the detector has seen. You'll know that the detector has run if there are files here. However, if you've ran the detector multiple times without adding files to the base audio directory (specified in the config.yaml) the list will not change. It is safe to delete files from this list or even remove the entire analyst logs directory if you want to analyze the same group of files multiple times for testing. 
+
+In dive logs, there should be a file for every 'collection' of data analyzed. The collection is titled 'first_datetime-last_datetime.csv'. This file has the status of each file that you tried to analyze. Note, if you analyze the exact same group of files twice, they will have exact start and end datetimes, hence the new file will write over the old one and you will have the exact same number of files as before. 
+
+In sys logs, there should be a new file for every time the system is run, this is probably your best indication if the system is running when you want it to. sys(tem) log files are named by the RASPBERRY PI's start time, this may be completely different from the other files who are named based on the files they are analyzing. In each sys log file is all the print statements from all the programs in the FKW_detector. 
+
+# Method 2: Check the systemclt status
+
+Use the status command from earlier to see how the process is doing. 
+
+```bash
+systemctl --user status save-whales.service
+```

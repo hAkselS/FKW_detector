@@ -26,3 +26,9 @@ What YOLO model would you like to use?
 
 ### Confidence Threshold (confidence_threshold: 0.25)
 How confident does the model need to be before counting a detection? 
+
+### Shutdown GPIO On Time (shutdown_GPIO_time: 15)
+How long should the RPi's GPIO pin that triggers the WISPR to cut power to the RPi5 be on for. Also note, this value acts a minimum on-time for the RPi so that the pi doesn't shut down immediately if there is not data to analyze. Minimum 15 seconds. 
+
+### Shutdown GPIO Pin Number (shutdown_GPIO_pin_number: 11)
+Select a RPi 5 pin to act as the 'shut me down now' pin used to trigger the WISPR to cut power to the RPi 5. 

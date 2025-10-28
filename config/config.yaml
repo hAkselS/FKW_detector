@@ -4,3 +4,5 @@ confidence_threshold: 0.35
 forced_shutdown: false
 model_path: models/fkw_whistle_classifier_2.0.pt
 num_files_to_analyze: 60
+shutdown_GPIO_on_time: 15
+shutdown_GPIO_pin_num: 11

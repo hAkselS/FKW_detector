@@ -1,6 +1,6 @@
 # Running the False Killer Whale Detector
 
-### Before you run
+## Before you run
 Make sure that your virtual environment is setup and activated. See, ```FKW_detector/instructions/SETUP.md``` for instructions on setting up a virtual environment. 
 
 Ensure that the ```base_audio_directory:``` category in ```FKW_detector/config/config.yaml``` points to where you .dat file data is or will be. 
@@ -9,7 +9,7 @@ Note, start on boot should eliminate the need to run this project manually, see,
 
 The following assumes that you want to test run the FKW_detector in a bench-top scenario. 
 
-### Running the FKW_detector
+## Running the FKW_detector
 
 Run the following command from the project root:
 

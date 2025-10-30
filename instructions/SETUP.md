@@ -3,36 +3,25 @@
 
 ### Creating a virtual environment
 
-Create a python 3.11 virtual environment in the FKW_detector project repo. 
+To run the FKW_detector, you must create a python 3.11 virtual environment in the FKW_detector project directory. 
 
-*While in the project root*
+*While in the project root ``` ~/FKW_detector/```,* run this command to create the virtual environment:
 
-```bash
- ~/FKW_detector/
-```
-
-Run this command to make the virtual environment:
 ```bash
 python3.11 -m venv venv
 ```
 
-Activate the virtual environment.
+Now, you need to activate the virtual environment that you created.
 
-*again, in the project root* 
+*From the project root, ```~/FKW_detector/```, run:* 
 
 ```bash
 source venv/bin/activate
 ```
 
-This will activate the virtual environement. You should see (venv) in front of your command line prompt. Like so:
+This command will activate the virtual environement. You should now see (venv) in front of your command line prompt. Like so: ```(venv) home/camera/FKW_detector$ ```
 
-```bash
-(venv) home/camera/FKW_detector$ 
-```
-
-Now that our virtual environment is active, we can install all our project dependencies into that virual environment using:
-
-*again, in the project root* 
+Now that the virtual environment is active, you can install all the project dependencies into that virual environment by running the following command in the project root directory:
 
 ```bash
 pip install -r requirements.txt
@@ -41,25 +30,16 @@ pip install -r requirements.txt
 This command will install all the required libraries to run the FKW_detector. This install may take up to twenty.
 
 
-### Activating the Virtual Environment Once it Has Been Setup
-/start here if you already have a working venv folder/ 
-*From the project root*
+## Activating the Virtual Environment Once it Has Been Setup
+*Start here if you already have a working venv folder.*
+
+Run the following command from the project root to activate your FKW_detector virtual environment:
 
 ```bash
 source venv/bin/activate
 ```
 
-This will activate the virtual environment. You should see (venv) in front of your command line prompt. 
-
-## Running the main program
-sys_control/process_control.py is the main script that makes the whole sha-bang run. Under the hood, process control is managing all the other helper scripts to make the magic happen. In general, the other scripts in this project are not meant to be run induvidually. 
-
-*From the project root*
-<python3 sys_control/process_control.py>
-
-*Note to people running on the desktop*
-If you are seeing that no new images are being analyzed, check to see what is in *logs/analyst_logs* directory. The observed audio and times json file is used to track what files have been previously seen, if your file names are in here, they will not be analyzed again.
-
+This command will activate the virtual environement. You should now see (venv) in front of your command line prompt. Like so: ```(venv) home/camera/FKW_detector$ ```
 
 ## Trouble Shooting
 
@@ -73,16 +53,48 @@ ModuleNotFoundError: No module named 'yaml'
 ```
 
 Or something that includes, "this version of X requires this verion of Y",
-then you probably have a dependency issue. In this case you should delete the virtual environment folder using:
+then you probably have a dependency issue. In this case you need to try to solve the dependency issue by installing the correct dependency into virtual environment or modified some of the dependency versions until they are compatable.
+
+If you are missing someting, like in the error shown above, try pip installing it using:
 
 ```bash
-rm -rf venv
+pip install theThingImMissing # make sure your venv is active!
 ```
-From the project root. Then you should go into the requirements.txt file using:
+
+For more complex issues or when you want the changes you make to be persistent, you should go into the requirements.txt file using:
 
 ```bash
 nano requirements.txt
 ```
-And try messing with the file versions or adding dependencies. Note that each time you do this you will need to create a virtual environment AND install its dependencies as outlined above. 
+
+You can modify dependency versions by changing the version number of the dependency that is giving you trouble. Ex:
+
+```bash
+ 'scipy==1.15.1' # change this number only if necessary
+ ```
+ 
+ You can also add new dependencies if necessary by simply adding the dependency as a new line in the requirements.txt file. Like so:
+
+```bash
+scipy==1.15.1
+ultralytics
+myNewDependency=1.3.5
+```
+  
+Note, each time you perform eitehr of these approaches you will need to either re-install your requirements.txt, as performed above, or completely destroy your virtual environment and rebuild it. 
+
+To perform the later, deactivate the virtual environment, remove the ```venv``` folder then rebuild the virtual environment. 
+
+```bash
+deactivate # deactivate the virtual environment
+rm -rf venv # burn down the old virtual environment
+python3.11 -m venv venv # create a new venv
+pip install -r requirements.txt # install your updated requirements
+source venv/bin/activate # activate! 
+```
+
+For complex issues, burning down the whole virtual environment folder is prefered to ensure a fresh environment each time. 
+
 
 #### No Data Outputs: 
+

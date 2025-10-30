@@ -1,5 +1,5 @@
 # User configurations for FKW_detector
-## Mess with these parameters to change operation variables
+### Mess with these parameters to change operation variables
 
 ### Forced Shutdown (forced_shutdown: True/False)
 If this flag is True that means the the pi shutdown unintentionally.

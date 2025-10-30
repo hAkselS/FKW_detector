@@ -1,4 +1,6 @@
-# Running the False Killer Whale Detector
+# Running FKW Detector
+
+### How to Run the False Killer Whale Detector
 
 ## Before you run
 Make sure that your virtual environment is setup and activated. See, ```FKW_detector/instructions/SETUP.md``` for instructions on setting up a virtual environment. 

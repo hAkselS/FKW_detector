@@ -1,5 +1,5 @@
 # Data Outputs
-## How to interpret the data outputs
+### How to interpret the data outputs
 
 ## Mission Data
 ### What is the Mission?

@@ -32,3 +32,7 @@ How long should the RPi's GPIO pin that triggers the WISPR to cut power to the R
 
 ### Shutdown GPIO Pin Number (shutdown_GPIO_pin_number: 11)
 Select a RPi 5 pin to act as the 'shut me down now' pin used to trigger the WISPR to cut power to the RPi 5. 
+
+### Mission Mode (mission_mode: True/False)
+If this flag is set to True, the RPi5 will shut itself down when analysis is complete.
+It is ESSENTIAL that this flag is true when the detector is deployed on a SeaGlider!!!

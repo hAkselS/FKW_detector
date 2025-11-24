@@ -9,9 +9,9 @@ Spec:   Handle all processes and their orderings.
         Reset forced shutdown flag, stop forced shutdown timer,
         shutdown the system gracefully.
 
-Usage:  python3 sys_control/process_control.py 
-
 ID:     pc 
+
+Usage:  python3 sys_control/process_control.py 
 '''
 
 import sys

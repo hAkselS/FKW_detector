@@ -27,7 +27,7 @@ def raise_GPIO(pin_number, wait_time):
         wait_time = 15
 
     print(f"\nsp: Raising GPIO [{pin_number}] for [{wait_time}] seconds")
-    # Raise GPIO TODO
+    # TODO: Raise GPIO 
     time.sleep(wait_time)
 
 # Shutdown the Raspberry Pi
@@ -39,13 +39,13 @@ def shutdown(reason="Not specified", config_GPIO_on_time=15, config_GPIO_pin_num
 
     args: string, reason for shutting down
     '''
-   
+
 
     raise_GPIO(config_GPIO_pin_num ,config_GPIO_on_time)
    
     print(f"sp: Shutting down due to: {reason}")
     
-    # TODO: THIS HAS NOT BEEN TESTED!!!!
+    # TODO: Test this on Raspberry Pi hardware
     # Check if the system is in mission mode
     try: 
         with open(config_file, 'r') as file:
@@ -54,6 +54,7 @@ def shutdown(reason="Not specified", config_GPIO_on_time=15, config_GPIO_pin_num
         print(f"sp: Error reading config file: {e}")
         print("sp: Unable to verify mission mode, proceeding with shutdown.")
         # Shutdown in the event that we cannot read the config
+        time.sleep(15))  # Give some time to get into the system if error occurs
         call("sudo shutdown -h now", shell=True)
         return
     
@@ -63,5 +64,6 @@ def shutdown(reason="Not specified", config_GPIO_on_time=15, config_GPIO_pin_num
         return
     else: 
         # Shutdown the Pi 
+        time.sleep(15)  # Give some time to get into the system if error occurs
         call("sudo shutdown -h now", shell=True)
     

@@ -1,4 +1,10 @@
 #!/bin/bash
+##############################################################################
+# spec:     Run the main process control script with proper environment setup.
+#           This script also creates the sys_logs. 
+#
+# usage:    ./sys_control/run_detector.sh
+##############################################################################
 
 # --- CONFIGURABLE SECTION ---
 CONDA_ENV="venv"            # conda/env name (used if conda fallback is needed)

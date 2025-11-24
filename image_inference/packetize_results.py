@@ -9,7 +9,7 @@ ID:     pr
 
 Usage:  Call this from another script!
 
-Next Step: Implement a function that filters detections by their bounding box size. 
+Up Next: Implement a function that filters detections by their bounding box size. 
 '''
 
 import pandas as pd 

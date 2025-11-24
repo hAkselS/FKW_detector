@@ -3,10 +3,10 @@ File:   detection/inference.py
 
 Spec:   Perform inference on spectrogram images to detect FKWs using YOLO.
 
-Usage:  Do not run this program directly. Call from system_control/transform_and_inference.py.
-
 I/O:    This program expects one or more spectrogram images as inputs. 
         This program outputs inference results and a success boolean. 
+
+Usage:  Do not run this program directly. Call from system_control/transform_and_inference.py.
 '''
 
 from ultralytics import YOLO

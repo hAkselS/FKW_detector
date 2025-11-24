@@ -3,10 +3,12 @@ File:   audio_transform/dat_to_wav.py
 
 Spec:   Convert a raw audio .dat file to a .wav file.
 
+I/O:    This program expects a .dat file as input and outputs a .wav file
+
+ID:     dw
+
 Usage:  Call this script from system_control/transform_and_inference.py.
         Do not run this program directly.
-
-I/O:    This program expects a .dat file as input and outputs a .wav file
 '''
 
 # TODO: If sample size is 3 safely convert to sample size = 2 (scipy wave can only handle 16 bit sample width)
@@ -30,7 +32,7 @@ def reduce_sample_size(file_name):
         # Read the original .wav file
         data, samplerate = sf.read(file_name)  
         sf.write(file_name, data, samplerate, subtype=target_sample_size)
-        # TODO: include in logging, but don't print 
+
         # print(f"Reduced sample size of '{file_name}' to {target_sample_size}.")
         return True
     except Exception as e:
@@ -79,8 +81,8 @@ def convert_dat_to_wav(input_dat_file, output_directory):
             
             if channels == None:
                 channels = 1 # Default to mono if not specified
-            # DEBUG / TODO: add to logging 
-            # print(f"Header values: sampling_rate={sampling_rate}, channels={channels}, sample_size={sample_size}, file_size={file_size}\n")
+
+            # print(f"dw: Header values: sampling_rate={sampling_rate}, channels={channels}, sample_size={sample_size}, file_size={file_size}\n")
 
             # Validate header values
             if None in (sampling_rate, channels, sample_size, file_size):

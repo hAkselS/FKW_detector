@@ -9,7 +9,7 @@ ID:     pr
 
 Usage:  Call this from another script!
 
-Next Step: Implement a function that filters detections by their bounding box size. 
+Up Next: Implement a function that filters detections by their bounding box size. 
 '''
 
 import pandas as pd 
@@ -53,7 +53,7 @@ def packetize_inference_outputs(input_csv):
                 results.append({'start_time': start_time, 'detections': detections})
                 total_detections += detections
 
-        print(f"\npr: total detections {total_detections}")
+        print(f"pr: total detections {total_detections}")
 
         # Save the packetized results
         packetized_df = pd.DataFrame(results)

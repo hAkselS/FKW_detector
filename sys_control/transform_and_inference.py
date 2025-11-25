@@ -7,9 +7,9 @@ Spec:   Repeatedly transfrom and inference selected wave files.
         true / false flag for each step (dat_to_wave, wave_to_spectro, image_analyzed)
         of the process. 
 
-Usage:  python3 system_control/transform_and_inference.py 
-
 ID:     ti
+
+Usage:  python3 system_control/transform_and_inference.py 
 '''
 
 import sys
@@ -69,7 +69,7 @@ def process_audio_and_inference(input_csv, model_path, confidence_threshold): # 
 
 
         df.to_csv(input_csv, index=False)  # Write updated CSV to memory
-        print(f'ti: processed {file_name}')
+        print(f'ti: processed {file_name}\n')
 
     print(f'\nti: analyzed {spectrograms_processed} spectrograms')
     

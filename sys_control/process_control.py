@@ -9,9 +9,9 @@ Spec:   Handle all processes and their orderings.
         Reset forced shutdown flag, stop forced shutdown timer,
         shutdown the system gracefully.
 
-Usage:  python3 sys_control/process_control.py 
-
 ID:     pc 
+
+Usage:  python3 sys_control/process_control.py 
 '''
 
 import sys
@@ -83,6 +83,18 @@ def main():
         shutdown_pi.shutdown('Error reading model_path or confidence_threshold')
         sys.exit(1)
 
+    # Grab the desired GPIO shutdown pin on time
+    try:    
+        config_GPIO_on_time = config['shutdown_GPIO_on_time']
+    except Exception as e:
+        print(f"pc: ✗ ERROR: Unexpected error reading shutdown_GPIO_on_time: {e}... Continuing with default of 15 seconds")
+
+    # Grab the desired GPIO shutdown pin
+    try:
+        config_GPIO_pin_num = config['shutdown_GPIO_pin_num']
+    except Exception as e:
+        print(f"pc: ✗ ERROR: Unexpected error reading shutdown_GPIO_pin_num: {e}... Continuing with default of 11")
+
     # Set the forced shutdown flag true
     config['forced_shutdown'] = True
     with open(config_file, 'w') as file:
@@ -109,7 +121,7 @@ def main():
         if life_timer.stop_timer_event.is_set():
             print("\npc: Timer cancelled by process_control.py")
 
-        shutdown_pi.shutdown('Mission completed successfully')
+        shutdown_pi.shutdown('Mission completed successfully', config_GPIO_on_time, config_GPIO_pin_num)
         sys.exit(0)
 
 if __name__ == "__main__":

@@ -26,12 +26,13 @@ ID:     sa
 import yaml 
 import os 
 import sys 
-import pandas as pd
 import json
+import pandas as pd
 from datetime import datetime
 from collections import OrderedDict
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
+global_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 ###################################################################
 # CONFIGURATION DEFAULTS
@@ -89,6 +90,7 @@ def create_dive_csv(csv_directory, csv_name):
         
         # Define CSV columns with proper data types
         columns = [
+            f'RPi_time={global_now}',     # string
             'file_name',           # string
             'start_time',          # datetime/string
             'selected_for_sampling', # boolean
@@ -141,8 +143,10 @@ def populate_dive_csv(csv_directory, csv_name, sorted_new_files):
 
         # Prepare new rows
         new_rows = []
+
         for file_datetime, file_path in sorted_new_files:
             new_rows.append({
+                f'RPi_time={global_now}': '(✿◠‿◠)',
                 "file_name": file_path,
                 "start_time": file_datetime.strftime("%Y-%m-%d %H:%M:%S"),
                 "selected_for_sampling": False,

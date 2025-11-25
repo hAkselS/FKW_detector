@@ -1,6 +1,9 @@
-allowed_runtime_minutes: 1
+allowed_runtime_minutes: 3
 base_audio_directory: 2024_descent
-confidence_threshold: 0.35
+confidence_threshold: 0.25
 forced_shutdown: false
+mission_mode: false
 model_path: models/fkw_whistle_classifier_2.0.pt
 num_files_to_analyze: 60
+shutdown_GPIO_on_time: 15
+shutdown_GPIO_pin_num: 11

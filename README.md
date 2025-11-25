@@ -49,7 +49,7 @@ setting using an ~analog~ power supply and the "time" command in Linux. The foll
 (181, 2590035, 0, 6.4406016)
 
 Note: it is incredibly easy to switch models, as the mission progresses, a better
-model will likely replace the current one ([text](models/fkw_whistle_classifier_2.0.pt)). 
+model will likely replace the current one ([fkw_whistle_classifier_2.0.pt](models/fkw_whistle_classifier_2.0.pt)). 
 
 ## Documentation
 Further documentation, including instructions for setting up the Raspberry Pi 5,

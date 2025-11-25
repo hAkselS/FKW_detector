@@ -97,4 +97,5 @@ For complex issues, burning down the whole virtual environment folder is prefere
 
 
 #### No Data Outputs: 
+If you're getting no data outputs, check the sys_logs to see if the detector is running and if there are any preventative errors. For example, if the detector cannot find the config file, it will shutdown immdediately, or if the detector does not see any new data it will exit without producing any data outputs.
 

@@ -69,7 +69,7 @@ def process_audio_and_inference(input_csv, model_path, confidence_threshold): # 
 
 
         df.to_csv(input_csv, index=False)  # Write updated CSV to memory
-        print(f'ti: processed {file_name}')
+        print(f'ti: processed {file_name}\n')
 
     print(f'\nti: analyzed {spectrograms_processed} spectrograms')
     

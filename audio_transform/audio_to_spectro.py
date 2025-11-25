@@ -77,6 +77,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
             padding_needed = target_length_samples - current_length_samples
             padding_seconds = padding_needed / sample_rate
 
+            print(f"as: Padding audio: adding {padding_seconds:.3f} seconds to reach 60 seconds total")
             # Add noise to the end of the audio data (instead of constant values)
             # Generate pink/brown noise in the frequency range of interest
             noise_samples = padding_needed
@@ -98,7 +99,7 @@ def process_audio_to_spectrograms(wave_file_path, output_directory, channel=5):
         # If longer than 60 seconds, truncate to exactly 60 seconds
         elif current_length_samples > target_length_samples:
             truncate_seconds = (current_length_samples - target_length_samples) / sample_rate
-            print(f"\nas: Truncating audio: removing {truncate_seconds:.1f} seconds to fit 60 seconds total")
+            print(f"as: Truncating audio: removing {truncate_seconds:.1f} seconds to fit 60 seconds total")
             data = data[:target_length_samples]
         
         # Now we have exactly 60 seconds of data

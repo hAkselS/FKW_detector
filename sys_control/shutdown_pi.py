@@ -54,7 +54,7 @@ def shutdown(reason="Not specified", config_GPIO_on_time=15, config_GPIO_pin_num
         print(f"sp: Error reading config file: {e}")
         print("sp: Unable to verify mission mode, proceeding with shutdown.")
         # Shutdown in the event that we cannot read the config
-        time.sleep(15))  # Give some time to get into the system if error occurs
+        time.sleep(15)  # Give some time to get into the system if error occurs
         call("sudo shutdown -h now", shell=True)
         return
     

@@ -10,7 +10,7 @@ If you're reading this, then something broke... sorry about that. Anyway, you ca
 Sys_logs holds exactly one log file per each time the FKW_detector is ran. Each log is titled as follows: 'process_control_{RPi_start_time}.log'. In the sys_log files are the full collection of print statements produced by the FKW_detector. Generally these print statements give you an idea of what program is doing what when. This should give you some insight on where your error occured. Good luck! 
 
 
-IMPORTANT: This datetime is a Raspberry Pi date time, not the WISPR datetime which is used when naming the dive logs and other data products. You can correlate RPi datetimes to dive logs by checking the RPi_time=... in the dive logs. Hopefully this is not necessary because the times may not be exactly the same as the programs pull the time.now() independently.
+IMPORTANT: This datetime is a Raspberry Pi date time, not the WISPR datetime which is used when naming the dive logs and other data products. You can correlate RPi datetimes to dive logs by checking the RPi_time=... in the dive logs. Hopefully this is not necessary because this process is tedious.
 
 ## What Happened in the Last Dive? (dive_logs) 
 

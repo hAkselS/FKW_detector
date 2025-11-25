@@ -19,14 +19,14 @@ instances of False Kilelr Whale wistles in recorded audio data that is transmitt
 NOAA headquarters.
 The Raspberry Pi 5 this code runs on is setup to run 
 the FKW_detector code automatically at start time (instructions for
-setting this up are provided in [/docs](docs)). It is up to the user
-to tune mission parameters, such as the amount of data to analyze, in the 
-[config.yaml](config.yaml) file.
+setting this up are provided in [START_ON_BOOT.md](docs/START_ON_BOOT.md)). 
+It is up to the user to tune mission parameters, such as the amount of data to analyze and the model confidence threshold, in the 
+[config.yaml](config/config.yaml) file. More information on the configuration parameters can be found in the [Configuration Documentation](docs/CONFIGURATION.md).
 
 ## Performance Metrics 
 #### Hardware Performance Metrics
 The authors of this code have measured the performance metrics in laboratory
-setting using an ~analog~ power supply and the "time" command in Linux. The following performance metrics were recorded:
+setting using an *analog* power supply and the "time" command in Linux. The following performance metrics were recorded:
 - Average time to analyze 10 minutes of audio data: 
   - Real time:      3 minutes   6 seconds
   - User time:      1 minute    34 seconds

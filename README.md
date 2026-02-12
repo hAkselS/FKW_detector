@@ -15,8 +15,7 @@ but version below the 5 tend to be too slow.
 This repository is designed to run on a Raspberry Pi 5 on a SeaGlider
 brand automous sea glider.
 The main purpose of this code is to create a small packet of suspected 
-instances of False Kilelr Whale wistles in recorded audio data that is transmittable to
-NOAA headquarters.
+instances of False Killer Whale wistles in recorded audio data that is transmittable to NOAA headquarters.
 The Raspberry Pi 5 this code runs on is setup to run 
 the FKW_detector code automatically at start time (instructions for
 setting this up are provided in [START_ON_BOOT.md](docs/START_ON_BOOT.md)). 

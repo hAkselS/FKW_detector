@@ -54,7 +54,7 @@ If it worked, you'll see ```Process: ...other stuff... (code=exited, status=0/SU
 
 You may also see ```Main PID': #### (run_detector)```, this means it's still running and you should wait a bit and check again. 
 
-#### 4. Test number two
+### 4. Test number two
 
 Power off the Raspberry Pi, wait ten seconds, power on the Raspberry Pi, and determine if the detector has started running. 
 

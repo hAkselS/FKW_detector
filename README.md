@@ -20,7 +20,7 @@ The Raspberry Pi 5 this code runs on is setup to run
 the FKW_detector code automatically at start time (instructions for
 setting this up are provided in [START_ON_BOOT.md](docs/START_ON_BOOT.md)). 
 It is up to the user to tune mission parameters, such as the amount of data to analyze and the model confidence threshold, in the 
-[config.yaml](config/config.yaml) file. More information on the configuration parameters can be found in the [Configuration Documentation](config/config.yaml).
+[config.yaml](config/config.yaml) file. More information on the configuration parameters can be found in the [Configuration Documentation](config/README.md).
 
 ## Performance Metrics 
 #### Hardware Performance Metrics
@@ -48,9 +48,9 @@ setting using an *analog* power supply and the "time" command in Linux. The foll
 (181, 2590035, 0, 6.4406016)
 
 Note: it is incredibly easy to switch models, as the mission progresses, a better
-model will likely replace the current one ([fkw_whistle_classifier_2.0.pt](models/fkw_whistle_classifier_2.0.pt)). 
+model will likely replace the current one [model](models). 
 
 ## Documentation
 Further documentation, including instructions for setting up the Raspberry Pi 5,
-running the repository manually, interpretting results, reading logs, and more can 
+running the repository manually, interpreting results, reading logs, and more can 
 be found in the [/docs](docs) folder.

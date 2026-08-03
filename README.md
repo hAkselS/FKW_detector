@@ -20,7 +20,7 @@ The Raspberry Pi 5 this code runs on is setup to run
 the FKW_detector code automatically at start time (instructions for
 setting this up are provided in [START_ON_BOOT.md](docs/START_ON_BOOT.md)). 
 It is up to the user to tune mission parameters, such as the amount of data to analyze and the model confidence threshold, in the 
-[config.yaml](config/config.yaml) file. More information on the configuration parameters can be found in the [Configuration Documentation](docs/CONFIGURATION.md).
+[config.yaml](config/config.yaml) file. More information on the configuration parameters can be found in the [Configuration Documentation](config/config.yaml).
 
 ## Performance Metrics 
 #### Hardware Performance Metrics

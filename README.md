@@ -48,7 +48,7 @@ setting using an *analog* power supply and the "time" command in Linux. The foll
 (181, 2590035, 0, 6.4406016)
 
 Note: it is incredibly easy to switch models, as the mission progresses, a better
-model will likely replace the current one [model](models). 
+model will likely replace the current [model](models). 
 
 ## Documentation
 Further documentation, including instructions for setting up the Raspberry Pi 5,

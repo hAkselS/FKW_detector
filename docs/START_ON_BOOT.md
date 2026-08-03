@@ -1,7 +1,7 @@
 # Start on Boot
 ### Make FKW_detector Run Automatically. 
 
-*skip to 'steps' to avoid learning anything.*
+*Skip to 'steps' to avoid learning anything.*
 THIS SHOULD ONLY BE DONE A RASPBERRY PI, not on a personal or goverment computer. 
 
 ### Intro to Systemd

@@ -62,7 +62,7 @@ Power off the Raspberry Pi, wait ten seconds, power on the Raspberry Pi, and det
 
 #### Method 1: Check the FKW_detector logs.
 
-In sys logs, there should be a new file for every time the system is run (via this method), this is probably your best indication if the system has run. Sys log files are named by the RASPBERRY PI's start time, this may be completely different from the other files who are named based on the .dat files they are analyzing. In each sys log file are the print statements you would see if you manually ran the detector using ```python3 sys_control/process_control.py```. 
+In sys logs, there should be a new file for every time the system is run (via this method), this is probably your best indication if the system has run. Sys log files are named by the RASPBERRY PI's start time, this may be completely different from the other files who are named based on the .dat files they are analyzing. In each sys log file are the print statements you would see if you manually ran the detector using ```python3 sys_control/main.py```. 
 
 In analyst logs, there should be a list of every file (and associated time) that the detector has seen. You'll know that the detector has run if there are files here. However, if you've ran the detector multiple times without adding files to the base audio directory (specified in the config.yaml) the list will not change. It is safe to delete files from this list or even remove the entire analyst logs directory if you want to analyze the same group of files multiple times for testing. 
 

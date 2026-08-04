@@ -70,7 +70,7 @@ def packetize_inference_outputs(input_csv):
     
 
 def main():
-   print(f"ti: PLEASE DO NOT RUN THIS SCRIPT BY ITSELF, RUN <python3 sys_control/process_control.py> INSTEAD, EXITING...")
+   print(f"ti: PLEASE DO NOT RUN THIS SCRIPT BY ITSELF, RUN <python3 sys_control/main.py> INSTEAD, EXITING...")
    import sys
    sys.exit(1)
 

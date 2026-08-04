@@ -17,7 +17,7 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # Use project-local venv by default, keep logs inside project for portability
 LOG_DIR="${PROJECT_DIR}/logs/sys_logs"
 mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/process_control_$(date '+%Y-%m-%d_%H-%M-%S').log"
+LOG_FILE="$LOG_DIR/main_$(date '+%Y-%m-%d_%H-%M-%S').log"
 
 # Prefer project-local venv activation
 VENV_ACTIVATE="$PROJECT_DIR/venv/bin/activate"
@@ -43,4 +43,4 @@ fi
 cd "$PROJECT_DIR" || exit 1
 
 # Run main script and capture output
-python3 sys_control/process_control.py >> "$LOG_FILE" 2>&1
+python3 sys_control/main.py >> "$LOG_FILE" 2>&1

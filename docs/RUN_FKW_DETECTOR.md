@@ -16,12 +16,12 @@ The following assumes that you want to test run the FKW_detector in a bench-top 
 Run the following command from the project root:
 
 ```bash
-python3 sys_control/process_control.py
+python3 sys_control/main.py
 ```
 
 
 ### How it works
-sys_control/process_control.py is the main script that makes the whole sha-bang run. Under the hood, process control is managing all the other helper scripts to make the magic happen. In general, the other scripts in this project are not meant to be run induvidually. 
+sys_control/main.py is the main script that makes the whole sha-bang run. Under the hood, process control is managing all the other helper scripts to make the magic happen. In general, the other scripts in this project are not meant to be run induvidually. 
 
 
 *Note to people running on the desktop*

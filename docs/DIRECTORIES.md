@@ -33,7 +33,7 @@ Think of this directory as the 'output' directory.
 Logs directory holds important information on what files 
 have been seen, what files need to be analyzed, and 
 the status of the files that have been analyzed. 
-This directory appears when you run process_control.py.
+This directory appears when you run main.py.
 Generally, these logs are only essential to developers,
 however, **if you are running bench top tests on a fixed set of files,
 you may need to clear our the analyst logs to re-analyze files.**

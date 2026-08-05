@@ -47,7 +47,7 @@ This command will activate the virtual environement. You should now see (venv) i
 If you're getting errors that rhyme with:
 ```bash
 Traceback (most recent call last):
-  File "sys_control/process_control.py", line 19, in <module>
+  File "sys_control/main.py", line 19, in <module>
     import yaml
 ModuleNotFoundError: No module named 'yaml'
 ```

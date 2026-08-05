@@ -80,7 +80,7 @@ def process_audio_and_inference(input_csv, model_path, confidence_threshold): # 
 
 def main():
     
-    print(f"ti: PLEASE DO NOT RUN THIS SCRIPT BY ITSELF, RUN <python3 sys_control/process_control.py> INSTEAD, EXITING...")
+    print(f"ti: PLEASE DO NOT RUN THIS SCRIPT BY ITSELF, RUN <python3 sys_control/main.py> INSTEAD, EXITING...")
     sys.exit(1)
 
 

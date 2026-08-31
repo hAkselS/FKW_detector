@@ -20,7 +20,7 @@ def packetize_inference_outputs(input_csv):
     # Find the name of the existing file 
     base_name = os.path.basename(input_csv)
     # Remove 'detection' from the base name, add 'packetized'
-    new_name = base_name.replace('detection', 'packetized')
+    new_name = base_name.replace('detections', 'packetized')
     
     # Create the output directory inside data_products/packets
     output_dir = os.path.join('data_products', 'packets')

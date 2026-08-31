@@ -25,3 +25,6 @@ What YOLO model would you like to use?
 How many audio files should be processed?
 Our initial guess is approximately 60 files. 
 In lab, 60 files equates to 1Wh of energy consumption on the RPi5. 
+
+#### TODO:
+Have FKW get base audio directory from pi_lager

@@ -9,6 +9,6 @@ yolo11n.pt
 .DS_Store
 .vscode/
 venv/ 
-2024_descent
+2024_descent*
 logs
 data_products

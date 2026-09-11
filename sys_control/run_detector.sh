@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if [ "$BENCHTEST" != "1" ]; then
-    sudo dtoverlay sdio
-fi
-
 PROJECT_DIR="$HOME/FKW_detector"
 LOG_DIR="$PROJECT_DIR/logs/sys_logs"
 

@@ -1,5 +1,5 @@
 allowed_runtime_minutes: 3
-base_audio_directory: 2024_descent
+base_audio_directory: /Users/aksel.sloan/FKW_detector/2024_descent
 confidence_threshold: 0.25
 mission_mode: false
 model_path: models/fkw_whistle_classifier_2.0.pt

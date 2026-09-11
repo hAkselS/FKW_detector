@@ -27,11 +27,13 @@ import sys_control.select_audio as select_audio
 
 ###################################################################
 # CONFIGURATION DEFAULTS
-config_file = project_root + '/config/config.yaml'
+config_file = os.path.join(project_root, 'config', 'config.yaml')
 ###################################################################
 
 def main():
     print("pc: Starting Process Control")
+    print(f"pc: Project root = {project_root}")
+    
     # Open the config file 
     try:
         with open(config_file, 'r') as file:
@@ -54,7 +56,7 @@ def main():
 
     # Grab the model path and confidence threshold
     try:
-        model_path = config['model_path']
+        model_path = os.path.join(project_root, config['model_path'])
         if not os.path.exists(model_path):
             print(f"pc: ✗ CRITICAL ERROR: Model file not found: {model_path}")
             sys.exit(1)

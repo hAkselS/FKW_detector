@@ -18,4 +18,8 @@ else
 fi
 
 export PYTHONUNBUFFERED=1
+
+# Change working directory to FKW_detector root
+cd "$PROJECT_DIR" || exit 1
+
 python -u "$PROJECT_DIR/sys_control/main.py" >> "$log_file" 2>&1

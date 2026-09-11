@@ -287,8 +287,8 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
 
     for root, dirs, files in os.walk(directory):
         # DEBUG
-        # print(f"Scanning: {root}")
-        # print(f"Files: {files}")
+        # print(f"sa: Scanning: {root}")
+        # print(f"sa: Files: {files}")
         for filename in files:
             if filename.endswith('.dat'):
                 file_path = os.path.join(root, filename)
@@ -313,7 +313,7 @@ def update_file_mapping(directory, time_mapping_file='observed_audio_and_times.j
     
     # If no new files, return existing mapping unchanged
     if new_files_found == 0:
-        print("sa: Update File Mapping: No new files found")
+        print(f"sa: Update File Mapping: No new files found in {directory}")
         return None # Check this 
     
     # Sort only the new files and append to existing mapping

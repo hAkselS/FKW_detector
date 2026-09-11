@@ -8,7 +8,7 @@ forced shutdown flag to be True.
 
 ### Base Audio Directory (base_audio_directory: path/to/directory)
 Where should the detector look for .dat audio files?
-This path should point to the *directory* where .dat files are expected to show up. 
+(Fully/Qualified/Path). This path should point to the *directory* where .dat files are expected to show up. 
 
 ### Confidence Threshold (confidence_threshold: 0.25)
 How confident does the model need to be before counting a detection? 
@@ -19,7 +19,7 @@ If this flag is set to True, the RPi5 will shut itself down when analysis is com
 It is ESSENTIAL that this flag is true when the detector is deployed on a SeaGlider!!!
 
 ### Model Path (model_path: path/to/model.pt)
-What YOLO model would you like to use? 
+(Relative/Path){Starting from FKW_detector/}. What YOLO model would you like to use? 
 
 ### Number of Files to Analyze (num_files_to_analyze: 60)
 How many audio files should be processed?
